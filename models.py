@@ -63,3 +63,33 @@ class Announcement(db.Document):
             'contents' : self.contents,
             'time' :  self.time.isoformat()
         }
+
+
+import bcrypt
+
+class User(db.Document):
+    user = db.StringField(unique=True)
+    hashed_password = db.StringField()
+
+    name = db.StringField()
+
+    is_admin = db.BooleanField(default=False)
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.username
+
+    def set_password(self, password):
+        self.hashed_password = bcrypt.hashpw(password, bcrypt.gensalt(14))
+
+    @staticmethod
+    def validate_login(password_hash, password):
+        return bcrypt.hashpw(password, password_hash) == password_hash
