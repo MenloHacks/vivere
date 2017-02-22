@@ -114,5 +114,5 @@ class User(db.Document):
 
     @staticmethod
     def validate_login(password_hash, password):
-        return bcrypt.hashpw(password.encode('utf8'), password_hash) == password_hash
+        return bcrypt.hashpw(password.encode('utf8'), password_hash.encode('utf8')) == password_hash
 
