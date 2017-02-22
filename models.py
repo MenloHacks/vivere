@@ -1,5 +1,5 @@
 from flask_mongoengine import MongoEngine
-from vivere import db
+from vivere import db, app
 
 from flask import request
 import datetime
@@ -66,14 +66,18 @@ class Announcement(db.Document):
 
 
 import bcrypt
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
 
 class User(db.Document):
-    user = db.StringField(unique=True)
+    username = db.StringField(unique=True)
     hashed_password = db.StringField()
 
     name = db.StringField()
 
     is_admin = db.BooleanField(default=False)
+
+
 
     def is_authenticated(self):
         return True
@@ -88,8 +92,27 @@ class User(db.Document):
         return self.username
 
     def set_password(self, password):
-        self.hashed_password = bcrypt.hashpw(password, bcrypt.gensalt(14))
+        self.hashed_password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt(14))
+
+    def generate_auth_token(self, expiration = 3600):
+        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
+        return s.dumps({ 'username': self.username })
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None # valid token, but ex
+            # pired
+        except BadSignature:
+            return None # invalid token
+
+        user = User.objects(username=data['username']).first()
+        return user
 
     @staticmethod
     def validate_login(password_hash, password):
-        return bcrypt.hashpw(password, password_hash) == password_hash
+        return bcrypt.hashpw(password.encode('utf8'), password_hash) == password_hash
+

@@ -19,6 +19,9 @@ db.init_app(app)
 
 
 from views import *
+from authentication import *
+
+
 
 
 if __name__ == '__main__':
@@ -33,6 +36,7 @@ if __name__ == '__main__':
     admin.add_views(ModelView(Announcement))
     admin.add_view(ModelView(Event))
     admin.add_views(ModelView(Location))
+    admin.add_views(ModelView(User))
 
 
 
