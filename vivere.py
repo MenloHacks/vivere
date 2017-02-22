@@ -2,14 +2,19 @@
 import datetime
 
 from flask import Flask
+from flask import request
+from flask import jsonify
 
 import flask_admin as admin
 from flask_mongoengine import MongoEngine
 from flask_admin.form import rules
 from flask_admin.contrib.mongoengine import ModelView
 
+from utils import  *
+
 # Create application
 app = Flask(__name__)
+
 
 # Create dummy secrey key so we can use sessions
 app.config['SECRET_KEY'] = '123456790'
@@ -47,10 +52,36 @@ class Announcement(db.Document):
     contents = db.StringField()
     time = db.DateTimeField(default=datetime.datetime.now())
 
+    def dictionary_representation(self):
+        return {
+            'title' : self.title,
+            'contents' : self.contents,
+            'time' :  self.time.isoformat()
+        }
+
 # Flask views
 @app.route('/')
 def index():
     return '<a href="/admin/">Click me to get to Admin!</a>'
+
+
+@app.route('/announcements')
+def get_announcements():
+    if 'start' in request.args:
+        start = int(request.args['start'])
+    else:
+        start = 0
+
+    if 'count' in request.args:
+        count = int(request.args['count'])
+    else:
+        count = 20
+
+    announcements = Announcement.objects(time__lte=datetime.datetime.now()).order_by('-time').skip(start).limit(count)
+    list = []
+    for a in announcements:
+        list.append(a.dictionary_representation())
+    return success_data_jsonify(list)
 
 
 if __name__ == '__main__':
