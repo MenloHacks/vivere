@@ -2,8 +2,7 @@
 import datetime
 
 from flask import Flask
-from flask import request
-from flask import jsonify
+from flask import request, make_response
 
 import flask_admin as admin
 from flask_mongoengine import MongoEngine
@@ -31,9 +30,11 @@ EVENT_END_TIME = datetime.datetime(year=2017, month=3, day=19, hour=0)
 class Location(db.Document):
     LOCATION_IMAGE_PATH = 'location/image/'
     name = db.StringField()
-    map = db.FileField()
 
-    is_primary_location = db.BooleanField()
+    map = db.FileField()
+    rank = db.IntField(default=-1)
+
+
 
     def dictionary_representation(self):
         if request is not None and request.url_root:
@@ -99,7 +100,6 @@ def get_times():
     })
 
 
-from flask import make_response
 @app.route('/' + Location.LOCATION_IMAGE_PATH + '<location_id>')
 def serve_location_image(location_id):
     success = True
@@ -119,6 +119,15 @@ def serve_location_image(location_id):
     return response
 
 
+@app.route('/maps')
+def get_maps():
+    locations = Location.objects(rank__gt=0).order_by('rank')
+    list = []
+
+    for l in locations:
+        list.append(l.dictionary_representation())
+
+    return success_data_jsonify(list)
 
 
 
@@ -158,6 +167,9 @@ def get_events():
     for a in events:
         list.append(a.dictionary_representation())
     return success_data_jsonify(list)
+
+
+
 
 
 if __name__ == '__main__':
