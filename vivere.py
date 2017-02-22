@@ -19,7 +19,6 @@ db.init_app(app)
 
 
 from views import *
-from authentication import *
 
 
 
