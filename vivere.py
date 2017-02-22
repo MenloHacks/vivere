@@ -91,6 +91,12 @@ class Announcement(db.Document):
 def index():
     return '<a href="/admin/">Click me to get to Admin!</a>'
 
+@app.route('/times')
+def get_times():
+    return success_data_jsonify({
+        'start' : EVENT_START_TIME.isoformat(),
+        'end' : EVENT_END_TIME.isoformat()
+    })
 
 
 from flask import make_response
