@@ -56,7 +56,13 @@ def login():
         return error_response(message='Invalid password', code=403)
 
 
+from flask import render_template, url_for
 
+@app.route('/admin/login',methods=['GET','POST'])
+def admin_login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    # return redirect(url_for('index'))
 
 
 @login_manager.user_loader
