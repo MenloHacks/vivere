@@ -5,3 +5,11 @@ def success_data_jsonify(obj):
         'success' : True,
         'data' : obj
     })
+
+def error_response(message, code):
+    response = jsonify({'success' : False,
+                        'error' : message
+    })
+    response.status_code = code
+
+    return response

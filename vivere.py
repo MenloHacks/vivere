@@ -24,9 +24,27 @@ app.config['MONGODB_SETTINGS'] = {'DB': 'testing'}
 db = MongoEngine()
 db.init_app(app)
 
+
+EVENT_START_TIME = datetime.datetime(year=2017, month=3, day=18, hour=2)
+EVENT_END_TIME = datetime.datetime(year=2017, month=3, day=19, hour=0)
+
 class Location(db.Document):
+    LOCATION_IMAGE_PATH = 'location/image/'
     name = db.StringField()
     map = db.FileField()
+
+    is_primary_location = db.BooleanField()
+
+    def dictionary_representation(self):
+        if request is not None and request.url_root:
+            return {
+                'name' : self.name,
+                'map' : request.url_root + self.LOCATION_IMAGE_PATH + str(self.id)
+            }
+        else:
+            return {
+                'name' : self.name
+            }
 
     def __unicode__(self):
         return self.name
@@ -41,6 +59,15 @@ class Event(db.Document):
     long_description = db.StringField()
 
     location = db.ReferenceField(Location, required=False)
+
+    def dictionary_representation(self):
+        return {
+            'start_time' : self.start_time.isoformat(),
+            'end_time' : self.end_time.isoformat(),
+            'short_description' : self.short_description,
+            'long_description' : self.long_description,
+            'location' : self.location.dictionary_representation()
+        }
 
 
     def __unicode__(self):
@@ -65,6 +92,30 @@ def index():
     return '<a href="/admin/">Click me to get to Admin!</a>'
 
 
+
+from flask import make_response
+@app.route('/' + Location.LOCATION_IMAGE_PATH + '<location_id>')
+def serve_location_image(location_id):
+    success = True
+    try:
+        location = Location.objects(id=location_id).first()
+    except:
+        success = False
+
+    if success == False:
+        return error_response(message='Invalid object ID', code=400)
+
+    if location is None:
+        return error_response(message='Location not found', code=400)
+
+    response = make_response(location.map.read())
+    response.mimetype = location.map.content_type
+    return response
+
+
+
+
+
 @app.route('/announcements')
 def get_announcements():
     if 'start' in request.args:
@@ -80,6 +131,25 @@ def get_announcements():
     announcements = Announcement.objects(time__lte=datetime.datetime.now()).order_by('-time').skip(start).limit(count)
     list = []
     for a in announcements:
+        list.append(a.dictionary_representation())
+    return success_data_jsonify(list)
+
+
+@app.route('/events')
+def get_events():
+    if 'start' in request.args:
+        start = int(request.args['start'])
+    else:
+        start = 0
+
+    if 'count' in request.args:
+        count = int(request.args['count'])
+    else:
+        count = 20
+
+    events = Event.objects().order_by('-start_time').skip(start).limit(count)
+    list = []
+    for a in events:
         list.append(a.dictionary_representation())
     return success_data_jsonify(list)
 
