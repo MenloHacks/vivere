@@ -29,13 +29,14 @@ if __name__ == '__main__':
     # Create admin
     admin = admin.Admin(app, 'MenloHacks Vivere')
 
-    from models import Announcement, Event, Location
+    from models import Announcement, Event, Location, MentorTicket
 
     # Add views
     admin.add_views(ModelView(Announcement))
     admin.add_view(ModelView(Event))
     admin.add_views(ModelView(Location))
     admin.add_views(ModelView(User))
+    admin.add_views(ModelView(MentorTicket))
 
 
 

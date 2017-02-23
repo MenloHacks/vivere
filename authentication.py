@@ -5,6 +5,8 @@ from models import User
 from flask import request
 
 from utils import error_response, success_data_jsonify
+from flask import request
+from constants import AUTHORIZATION_HEADER_FIELD
 
 
 login_manager = LoginManager()
@@ -53,7 +55,7 @@ def login():
         return success_data_jsonify({'name' : user.name,
                                      'token' : token})
     else:
-        return error_response(message='Invalid password', code=403)
+        return error_response(message='Invalid password', code=401)
 
 
 from flask import render_template, url_for
@@ -64,6 +66,12 @@ def admin_login():
         return render_template('login.html')
     # return redirect(url_for('index'))
 
+
+def current_user():
+    if AUTHORIZATION_HEADER_FIELD in request.headers:
+        token = request.headers[AUTHORIZATION_HEADER_FIELD]
+        return User.verify_auth_token(token)
+    return None
 
 @login_manager.user_loader
 def load_user(username):

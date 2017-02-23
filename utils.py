@@ -19,3 +19,7 @@ def error_response(message, code):
     response.status_code = code
 
     return response
+
+def unauthorized_response():
+    return error_response('Invalid authentication token', code=403)
+

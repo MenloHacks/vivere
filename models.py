@@ -64,8 +64,11 @@ class Announcement(db.Document):
             'time' :  self.time.isoformat()
         }
 
+    def __unicode__(self):
+        return self.title
 
-import bcrypt
+
+from passlib.hash import django_pbkdf2_sha256
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 
@@ -74,9 +77,17 @@ class User(db.Document):
     hashed_password = db.StringField()
 
     name = db.StringField()
+    school = db.StringField()
+
+    photo_form_url = db.StringField()
+    liability_form_url = db.StringField()
+
+    dietary_restrictions = db.StringField()
 
     is_admin = db.BooleanField(default=False)
+    is_mentor = db.BooleanField(default=False)
 
+    apns_token = db.StringField()
 
 
     def is_authenticated(self):
@@ -92,7 +103,7 @@ class User(db.Document):
         return self.username
 
     def set_password(self, password):
-        self.hashed_password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt(14))
+        self.hashed_password = django_pbkdf2_sha256.using(rounds=3000).hash(password)
 
     def generate_auth_token(self, expiration = 3600):
         s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
@@ -114,5 +125,38 @@ class User(db.Document):
 
     @staticmethod
     def validate_login(password_hash, password):
-        return bcrypt.hashpw(password.encode('utf8'), password_hash.encode('utf8')) == password_hash
+        return django_pbkdf2_sha256.verify(password, password_hash)
+
+    def __unicode__(self):
+        return self.username
+
+class MentorTicket(db.Document):
+
+    EXPIRATION_TIME = 1800 #automatically expire after 30 minutes.
+
+    description = db.StringField()
+    location = db.StringField()
+    contact = db.StringField()
+
+    is_complete = db.BooleanField(default=False)
+
+    claimed_by = db.ReferenceField(User, required=False)
+    created_by = db.ReferenceField(User)
+
+    time_created = db.DateTimeField(default=datetime.datetime.now())
+    time_claimed = db.DateTimeField()
+
+    def dictionary_representation(self):
+        return {
+            'description' : self.description,
+            'location' : self.location,
+            'contact' : self.contact,
+            'claimed' : self.claimed_by  == None,
+            'time_created' : self.time_created.isoformat(),
+            'id' : str(self.id)
+        }
+
+
+
+
 
