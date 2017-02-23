@@ -41,6 +41,9 @@ if __name__ == '__main__':
 
     from models import Announcement, Event, Location, MentorTicket
 
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
+
     # Add views
     admin.add_views(ModelView(Announcement))
     admin.add_view(ModelView(Event))
@@ -49,6 +52,5 @@ if __name__ == '__main__':
     admin.add_views(ModelView(MentorTicket))
 
 
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+
 
