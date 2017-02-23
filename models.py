@@ -89,7 +89,6 @@ class User(db.Document):
 
     is_admin = db.BooleanField(default=False)
 
-    apns_token = db.StringField()
 
 
     def is_authenticated(self):
