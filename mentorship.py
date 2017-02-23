@@ -8,7 +8,30 @@ from utils import success_data_jsonify, error_response
 
 @app.route('/mentorship/create', methods=['POST'])
 def create_ticket():
-    pass
+    if not 'description' in request.json:
+        return error_response('Missing parameter description', code=400)
+
+    if not 'location' in request.json:
+        return error_response('Missing parameter location', code=400)
+
+    if not 'contact' in request.json:
+        return error_response('Missing parameter contact', code=400)
+
+    user = current_user()
+    if user is None:
+        return error_response('No logged in user', code=401)
+
+    ticket = MentorTicket()
+
+    ticket.description = request.json['description']
+    ticket.location = request.json['location']
+    ticket.contact = request.json['contact']
+
+    ticket.created_by = user
+
+    ticket.save()
+
+    return success_data_jsonify(ticket.dictionary_representation(), code=201)
 
 @app.route('/mentorship/tickets')
 def get_tickets():
@@ -70,13 +93,32 @@ def claim_ticket():
             return error_response('User is not a mentor', code=403)
 
         ticket.claimed_by = user
+        ticket.time_claimed = datetime.datetime.now()
         ticket.save()
 
     else:
         return error_response('Missing parameter ticket_id', code=400)
 
 @app.route('/mentorship/reopen', methods=['POST'])
-def open_ticket():
-    pass
+def reopen_ticket():
+    if not 'ticket_id' in request.json:
+        return error_response('Missing parameter ticket_id', code=400)
+    else:
+        user = current_user()
+        if user is None:
+            return error_response('No current user logged in', code=401)
+
+        ticket = MentorTicket.objects(id=request.json['id'])
+        if ticket is None:
+            return error_response('No ticket with specified ID', code=404)
+
+        if ticket.created_by == user or ticket.claimed_by == user:
+            ticket.claimed_by = None
+            ticket.save()
+            return success_data_jsonify(ticket.dictionary_representation())
+        else:
+            return error_response('Invalid permissions', code=403)
+
+
 
 
