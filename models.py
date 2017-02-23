@@ -57,6 +57,9 @@ class Announcement(db.Document):
     contents = db.StringField()
     time = db.DateTimeField(default=datetime.datetime.now())
 
+    def save(self):
+        super(Announcement, self).save()
+
     def dictionary_representation(self):
         return {
             'title' : self.title,
