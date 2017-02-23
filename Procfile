@@ -1,1 +1,1 @@
-web: gunicorn vivere
+web gunicorn manage:vivere
