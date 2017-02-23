@@ -1,1 +1,1 @@
-web: gunicorn vivere
+web: python vivere.py
