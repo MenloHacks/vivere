@@ -1,6 +1,6 @@
 from flask import jsonify
 
-def success_data_jsonify(obj, code=200):
+def success_data_jsonify(obj={}, code=200):
     response = jsonify({
         'success' : True,
         'data' : obj

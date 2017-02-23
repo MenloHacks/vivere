@@ -85,7 +85,6 @@ class User(db.Document):
     dietary_restrictions = db.StringField()
 
     is_admin = db.BooleanField(default=False)
-    is_mentor = db.BooleanField(default=False)
 
     apns_token = db.StringField()
 
@@ -138,13 +137,13 @@ class MentorTicket(db.Document):
     location = db.StringField()
     contact = db.StringField()
 
-    is_complete = db.BooleanField(default=False)
 
     claimed_by = db.ReferenceField(User, required=False)
     created_by = db.ReferenceField(User)
 
     time_created = db.DateTimeField(default=datetime.datetime.now())
     time_claimed = db.DateTimeField()
+    time_complete = db.DateTimeField()
 
     def dictionary_representation(self):
         return {

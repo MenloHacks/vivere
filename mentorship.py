@@ -33,7 +33,66 @@ def create_ticket():
 
     return success_data_jsonify(ticket.dictionary_representation(), code=201)
 
-@app.route('/mentorship/tickets')
+@app.route('/mentorship/user/queue')
+def get_user_tickets():
+    user = current_user()
+    if user is None:
+        return error_response('No logged in user', code=401)
+    else:
+        current_time = datetime.datetime.now()
+        expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
+
+        open_tickets = MentorTicket.objects(time_created__gte=expiry_time, claimed_by=None, created_by=user).order_by('-time_created')
+        closed_tickets = MentorTicket.objects(time_complete__ne=None, created_by=user).order_by('-time_created')
+        expired_tickets = MentorTicket.objects(time_complete=None, created_by=user, time_created__le=expiry_time, claimed_by=None).order_by('-time_created')
+        in_progress_tickets = MentorTicket.objects(time_complete=None, created_by=user, claimed_by__ne=None).order_by('-time_created')
+
+        response = {}
+
+        list = []
+        for t in open_tickets:
+            list.append(t.dictionary_representation())
+        response['open'] = list
+
+        list = []
+        for t in closed_tickets:
+            list.append(t.dictionary_representation())
+        response['closed'] = list
+
+        list = []
+        for t in expired_tickets:
+            list.append(t.dictionary_representation())
+        response['expired'] = list
+
+        list = []
+        for t in in_progress_tickets:
+            list.append(t.dictionary_representation())
+        response['in_progress'] = list
+
+        return success_data_jsonify(response)
+
+
+@app.route('/mentorship/user/claimed')
+def claimed_tickets():
+    user = current_user()
+    if user is None:
+        return error_response('No user is currently logged in', code=401)
+    else:
+        current_time = datetime.datetime.now()
+        expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
+        claimed_tickets = MentorTicket.objects(time_created__gte=expiry_time, claimed_by=user).order_by('time_created')
+
+        list = []
+        for t in claimed_tickets:
+            list.append(t.dictionary_representation())
+
+        return success_data_jsonify(list)
+
+
+
+
+
+@app.route('/mentorship/queue')
 def get_tickets():
     if 'start' in request.args:
         start = int(request.args['start'])
@@ -45,33 +104,17 @@ def get_tickets():
     else:
         count = 20
 
-
-
     current_time = datetime.datetime.now()
     expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
-    response = {}
-
-    user = current_user()
-    if start == 0 and user is not None:
-        list = []
-        user_tickets = MentorTicket.objects(time_created__gte=expiry_time, claimed_by=None, created_by=user).order_by('-time_created').skip(
-            start).limit(count)
-
-        for t in user_tickets:
-            list.append(t.dictionary_representation())
-
-        response['user_created'] = list
-
-    tickets  = MentorTicket.objects(time_created__gte=expiry_time, claimed_by=None, created_by__ne=user).order_by('time_created').skip(start).limit(count)
+    tickets = MentorTicket.objects(time_created__gte=expiry_time, claimed_by=None, time_complete=None).order_by('time_created').skip(start).limit(count)
 
     tickets_list = []
     for t in tickets:
         tickets_list.append(t.dictionary_representation())
 
-    response['queue'] = tickets_list
 
-    return success_data_jsonify(response)
+    return success_data_jsonify(tickets_list)
 
 
 
@@ -88,9 +131,6 @@ def claim_ticket():
 
         if user is None:
             return error_response("No current user logged in", code=401)
-
-        if user.is_mentor == False:
-            return error_response('User is not a mentor', code=403)
 
         ticket.claimed_by = user
         ticket.time_claimed = datetime.datetime.now()
@@ -116,6 +156,27 @@ def reopen_ticket():
             ticket.claimed_by = None
             ticket.save()
             return success_data_jsonify(ticket.dictionary_representation())
+        else:
+            return error_response('Invalid permissions', code=403)
+
+@app.route('/mentorship/close', methods=['POST'])
+def close_ticket():
+    if not 'ticket_id' in request.json:
+        return error_response('Missing parameter ticket_id', code=400)
+    else:
+
+        user = current_user()
+        if user is None:
+            return error_response('No current user logged in', code=401)
+
+        ticket = MentorTicket.objects(id=request.json['id'])
+        if ticket is None:
+            return error_response('No ticket with specified ID', code=404)
+
+        if ticket.created_by == user or ticket.claimed_by == user:
+            ticket.time_complete = datetime.datetime.now()
+            return success_data_jsonify(ticket.dictionary_representation())
+
         else:
             return error_response('Invalid permissions', code=403)
 
