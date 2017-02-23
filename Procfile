@@ -1,1 +1,1 @@
-web: gunicorn -w 4 -b 0.0.0.0:$PORT -k gevent vivere
+web: gunicorn -w 4 -b 0.0.0.0:$PORT -k gevent vivere:vivere
