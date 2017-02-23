@@ -1,1 +1,1 @@
-web: gunicorn vivere.vivere
+web: gunicorn vivere
