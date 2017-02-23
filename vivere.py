@@ -33,22 +33,21 @@ from views import *
 
 
 
-if __name__ == '__main__':
     # Create application
 
     # Create admin
-    admin = admin.Admin(app, 'MenloHacks Vivere')
+admin = admin.Admin(app, 'MenloHacks Vivere')
 
-    from models import Announcement, Event, Location, MentorTicket
+from models import Announcement, Event, Location, MentorTicket
 
     # Add views
-    admin.add_views(ModelView(Announcement))
-    admin.add_view(ModelView(Event))
-    admin.add_views(ModelView(Location))
-    admin.add_views(ModelView(User))
-    admin.add_views(ModelView(MentorTicket))
+admin.add_views(ModelView(Announcement))
+admin.add_view(ModelView(Event))
+admin.add_views(ModelView(Location))
+admin.add_views(ModelView(User))
+admin.add_views(ModelView(MentorTicket))
 
 
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+port = int(os.environ.get('PORT', 5000))
+app.run(host='0.0.0.0', port=port)
 
