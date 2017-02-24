@@ -2,7 +2,7 @@ from models import Announcement, Event, Location, User
 from constants import EVENT_END_TIME, EVENT_START_TIME
 from utils import error_response, success_data_jsonify
 
-from vivere import app
+from configuration import app
 from flask import Flask, request, make_response
 import datetime
 

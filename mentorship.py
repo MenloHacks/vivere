@@ -1,4 +1,4 @@
-from vivere import app
+from configuration import app
 from flask_mongoengine import MongoEngine
 from models import MentorTicket
 from flask import request

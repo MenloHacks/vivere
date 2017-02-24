@@ -1,5 +1,5 @@
 from flask_mongoengine import MongoEngine
-from vivere import db, app
+from configuration import db
 
 from flask import request
 import datetime

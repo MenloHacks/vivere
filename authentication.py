@@ -1,5 +1,5 @@
 from flask_login import  LoginManager
-from vivere import app
+from configuration import app
 from models import User
 
 from flask import request
