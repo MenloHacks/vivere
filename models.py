@@ -17,11 +17,13 @@ class Location(db.Document):
         if request is not None and request.url_root:
             return {
                 'name' : self.name,
-                'map' : request.url_root + self.LOCATION_IMAGE_PATH + str(self.id)
+                'map' : request.url_root + self.LOCATION_IMAGE_PATH + str(self.id),
+                'id' : str(self.id)
             }
         else:
             return {
-                'name' : self.name
+                'name' : self.name,
+                'id' : str(self.id)
             }
 
     def __unicode__(self):
@@ -44,7 +46,8 @@ class Event(db.Document):
             'end_time' : self.end_time.isoformat(),
             'short_description' : self.short_description,
             'long_description' : self.long_description,
-            'location' : self.location.dictionary_representation()
+            'location' : self.location.dictionary_representation(),
+            'id' : str(self.id)
         }
 
 
@@ -64,7 +67,8 @@ class Announcement(db.Document):
         return {
             'title' : self.title,
             'contents' : self.contents,
-            'time' :  self.time.isoformat()
+            'time' :  self.time.isoformat(),
+            'id': str(self.id)
         }
 
     def __unicode__(self):
