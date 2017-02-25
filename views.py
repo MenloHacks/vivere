@@ -72,18 +72,9 @@ def get_announcements():
 
 
 @app.route('/events')
+#shouldn't be too many so I'll send them all at once.
 def get_events():
-    if 'start' in request.args:
-        start = int(request.args['start'])
-    else:
-        start = 0
-
-    if 'count' in request.args:
-        count = int(request.args['count'])
-    else:
-        count = 20
-
-    events = Event.objects().order_by('-start_time').skip(start).limit(count)
+    events = Event.objects().order_by('-start_time')
     list = []
     for a in events:
         list.append(a.dictionary_representation())
