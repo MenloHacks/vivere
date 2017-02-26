@@ -84,6 +84,7 @@ Sample JSON
 | name | The name of the location|
 | map | A url with an image of the map for the location.|
 | rank| A number in which to sort the location by. The rank will only appear if it is a primary location, one to show on the list of maps.|
+| is_primary| Whether or not the map should show up in the list of maps. Equivalent to rank > -1|
 
 
 ```json
@@ -91,7 +92,8 @@ Sample JSON
   "id": "58ad07c47a2f2e9dfdbac50b",
   "map": "https://api.menlohacks.com/location/image/58ad07c47a2f2e9dfdbac50b",
   "name": "test",
-  "rank":1
+  "rank":1,
+  "is_primary" : true
 }
 ```
 
@@ -220,7 +222,8 @@ An example successful response returns an array of maps. An example is shown bel
       "id": "58ad07c47a2f2e9dfdbac50b",
       "map": "https://api.menlohacks.com/location/image/58ad07c47a2f2e9dfdbac50b",
       "name": "Basement",
-      "rank" : 1
+      "rank" : 1,
+      "is_primary" : true
     }
   ],
   "success": true

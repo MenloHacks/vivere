@@ -30,6 +30,9 @@ class Location(db.Document):
             }
         if self.rank > 0:
             dictionary['rank'] = self.rank
+            dictionary['is_primary'] = True
+        else:
+            dictionary['is_primary'] = False
         return dictionary
 
     def __unicode__(self):
