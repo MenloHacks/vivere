@@ -64,7 +64,7 @@ class Announcement(db.Document):
 
     def dictionary_representation(self):
         return {
-            'contents' : self.message,
+            'message' : self.message,
             'time' :  self.time.isoformat(),
             'id': str(self.id)
         }
