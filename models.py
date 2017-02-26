@@ -3,6 +3,7 @@ from configuration import db, app
 
 from flask import request
 import datetime
+from notification import send_announcement_update, send_event_update, send_mentor_update
 
 class Location(db.Document):
     LOCATION_IMAGE_PATH = 'location/image/'
@@ -40,6 +41,10 @@ class Event(db.Document):
 
     location = db.ReferenceField(Location, required=False)
 
+    def save(self):
+        send_event_update(event=self)
+        super(Event, self).save()
+
     def dictionary_representation(self):
         return {
             'start_time' : self.start_time.isoformat(),
@@ -59,7 +64,9 @@ class Announcement(db.Document):
     message = db.StringField()
     time = db.DateTimeField(default=datetime.datetime.now())
 
+
     def save(self):
+        send_announcement_update(announcement=self)
         super(Announcement, self).save()
 
     def dictionary_representation(self):
@@ -149,6 +156,10 @@ class MentorTicket(db.Document):
     time_opened = db.DateTimeField(default=datetime.datetime.now())
     time_claimed = db.DateTimeField()
     time_complete = db.DateTimeField()
+
+    def save(self):
+        send_mentor_update(ticket=self)
+        super(MentorTicket, self).save()
 
     def dictionary_representation(self):
         current_time = datetime.datetime.now()
