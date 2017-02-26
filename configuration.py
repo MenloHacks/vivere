@@ -6,7 +6,11 @@ import os
 app = Flask(__name__)
 # Create dummy secrey key so we can use sessions
 
-app.config['SECRET_KEY'] = '123456790'
+if 'SECRET_KEY' in os.environ:
+    app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+else:
+    app.config['SECRET_KEY'] = '123456790'
+
 
 # Create models
 if 'MONGODB_URI' in os.environ:
