@@ -4,7 +4,6 @@ from flask_mongoengine import MongoEngine
 import os
 
 app = Flask(__name__)
-# Create dummy secrey key so we can use sessions
 
 if 'SECRET_KEY' in os.environ:
     app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
