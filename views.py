@@ -1,5 +1,5 @@
 from models import Announcement, Event, Location, User
-from constants import EVENT_END_TIME, EVENT_START_TIME
+from constants import EVENT_END_TIME, EVENT_START_TIME, HACKING_START_TIME, HACKING_END_TIME
 from utils import error_response, success_data_jsonify
 
 from configuration import app
@@ -16,8 +16,10 @@ def index():
 @app.route('/times')
 def get_times():
     return success_data_jsonify({
-        'start' : EVENT_START_TIME.isoformat(),
-        'end' : EVENT_END_TIME.isoformat()
+        'event_start_time' : EVENT_START_TIME.isoformat(),
+        'event_end_time' : EVENT_END_TIME.isoformat(),
+        'hacking_start_time' : HACKING_START_TIME.isoformat(),
+        'hacking_end_time' : HACKING_END_TIME.isoformat()
     })
 
 
@@ -74,7 +76,7 @@ def get_announcements():
 @app.route('/events')
 #shouldn't be too many so I'll send them all at once.
 def get_events():
-    events = Event.objects().order_by('-start_time')
+    events = Event.objects().order_by('start_time')
     list = []
     for a in events:
         list.append(a.dictionary_representation())

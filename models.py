@@ -1,5 +1,5 @@
 from flask_mongoengine import MongoEngine
-from configuration import db
+from configuration import db, app
 
 from flask import request
 import datetime
@@ -56,8 +56,7 @@ class Event(db.Document):
 
 
 class Announcement(db.Document):
-    title = db.StringField()
-    contents = db.StringField()
+    message = db.StringField()
     time = db.DateTimeField(default=datetime.datetime.now())
 
     def save(self):
@@ -65,8 +64,7 @@ class Announcement(db.Document):
 
     def dictionary_representation(self):
         return {
-            'title' : self.title,
-            'contents' : self.contents,
+            'contents' : self.message,
             'time' :  self.time.isoformat(),
             'id': str(self.id)
         }
@@ -110,7 +108,7 @@ class User(db.Document):
     def set_password(self, password):
         self.hashed_password = django_pbkdf2_sha256.using(rounds=3000).hash(password)
 
-    def generate_auth_token(self, expiration = 3600):
+    def generate_auth_token(self, expiration = 108000):
         s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
         return s.dumps({ 'username': self.username })
 
@@ -148,18 +146,35 @@ class MentorTicket(db.Document):
     created_by = db.ReferenceField(User)
 
     time_created = db.DateTimeField(default=datetime.datetime.now())
+    time_opened = db.DateTimeField(default=datetime.datetime.now())
     time_claimed = db.DateTimeField()
     time_complete = db.DateTimeField()
 
     def dictionary_representation(self):
-        return {
+        current_time = datetime.datetime.now()
+        expiry_time = self.time_opened + datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
+
+        dictionary = {
             'description' : self.description,
             'location' : self.location,
             'contact' : self.contact,
-            'claimed' : self.claimed_by  == None,
+            'claimed' : self.claimed_by  != None,
+            'expired' : current_time > expiry_time,
             'time_created' : self.time_created.isoformat(),
-            'id' : str(self.id)
+            'id' : str(self.id),
         }
+
+        if self.time_complete is None:
+            dictionary['time_complete'] = None
+        else:
+            dictionary['time_complete'] = self.time_complete.isoformat()
+
+
+
+
+        return dictionary
+
+
 
 
 

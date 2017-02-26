@@ -26,13 +26,19 @@ def create_user():
     if name is None:
         return error_response(message='Missing parameter name', code=400)
 
+    user = User.objects(username=username).first()
+    if user is not None:
+        return error_response(message='A user already exists with this username', code=400)
+
     user = User()
     user.username = username
     user.set_password(password)
     user.name = name
     user.save()
 
-    return success_data_jsonify({}, code=201)
+    token = user.generate_auth_token()
+
+    return success_data_jsonify({'token' : token}, code=201)
 
 
 @app.route('/user/login', methods=['POST'])
