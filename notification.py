@@ -24,13 +24,13 @@ def send_notification(title, body, channel_name):
 
 
 def send_event_update(event):
-    pusher.trigger(EVENT_UPDATE, u'save', event.dictionary_representation())
+    pusher_client.trigger(EVENT_UPDATE, u'save', event.dictionary_representation())
 
 def send_announcement_update(announcement):
-    pusher.trigger(ANNOUNCEMENT_UPDATE, u'save', announcement.dictionary_representation())
+    pusher_client.trigger(ANNOUNCEMENT_UPDATE, u'save', announcement.dictionary_representation())
 
 def send_mentor_update(ticket):
-    pusher.trigger(MENTOR_UPDATE, u'save', ticket.dictionary_representation())
+    pusher_client.trigger(MENTOR_UPDATE, u'save', ticket.dictionary_representation())
 
 
 
