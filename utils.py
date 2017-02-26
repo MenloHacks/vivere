@@ -6,6 +6,9 @@ def success_data_jsonify(obj={}, code=200):
         'data' : obj
     })
 
+    #remove in prod
+    response.headers['Access-Control-Allow-Origin'] = '*'
+
     response.status_code = code
 
     return response
@@ -17,6 +20,9 @@ def error_response(message, code):
                         'error' : message
     })
     response.status_code = code
+
+    #remove in prod
+    response.headers['Access-Control-Allow-Origin'] = '*'
 
     return response
 
