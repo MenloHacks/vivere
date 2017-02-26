@@ -18,16 +18,19 @@ class Location(db.Document):
         if request is not None and request.url_root:
             map_url = request.url_root + self.LOCATION_IMAGE_PATH + str(self.id)
             map_url = map_url.replace('http', 'https')
-            return {
+            dictionary = {
                 'name' : self.name,
                 'map' : map_url,
                 'id' : str(self.id)
             }
         else:
-            return {
+            dictionary = {
                 'name' : self.name,
                 'id' : str(self.id)
             }
+        if self.rank > 0:
+            dictionary['rank'] = self.rank
+        return dictionary
 
     def __unicode__(self):
         return self.name
