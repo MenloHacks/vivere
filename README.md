@@ -1,7 +1,7 @@
 # MenloHacks Vivere
 ### Introduction
 MenloHacks Vivere is the backend system for all day-of-operations.
-It is written in Python using the Flask framework and uses MongoDB for its datastore.
+It is written in Python using the Flask framework and uses MongoDB for its datastore. Note that Vivere is currently a work in progress and certain things are not finalized yet or secure.
 
 All endpoints are relative to `api.menlohacks.com` and for endpoints that require
 authorization the authorization token should be placed in the `X-MenloHacks-Authorization` field.
