@@ -92,6 +92,7 @@ def create_announcement():
     if from_number in APPROVED_NUMBERS:
         a = Announcement()
         a.message = body
+        a.time = datetime.datetime.now()
         a.save()
     return success_data_jsonify({})
 
