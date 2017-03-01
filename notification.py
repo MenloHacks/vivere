@@ -5,12 +5,10 @@ from constants import ALL_DEVICES_APNS, MENTOR_UPDATE, ANNOUNCEMENT_UPDATE, EVEN
 pusher_client = pusher.Pusher(os.environ['pusher_app_id'], os.environ['pusher_key'], os.environ['pusher_secret'])
 
 
-def send_notification(title, body, channel_name):
+def send_notification(message, channel_name):
     alert_payload = {
-        'body': body
+        'body': message
     }
-    if title is not None and len(title) > 0:
-        alert_payload['title'] = title
 
     payload = {
         'apns': {
@@ -36,7 +34,7 @@ def send_mentor_update(ticket):
 
 
 def broadcast_apns(announcement):
-    send_notification(announcement.title, announcement.contents, ALL_DEVICES_APNS)
+    send_notification(announcement.message, ALL_DEVICES_APNS)
 
 
 
