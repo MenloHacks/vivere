@@ -76,8 +76,10 @@ class Announcement(db.Document):
 
 
     def save(self):
+        push_sent = self.push_notification_sent
+        self.push_notification_sent = True
         super(Announcement, self).save()
-        if self.push_notification_sent == False:
+        if push_sent == False:
             broadcast_apns(self)
             self.push_notification_sent = True
         send_announcement_update(announcement=self)
