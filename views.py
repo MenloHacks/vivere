@@ -5,6 +5,7 @@ from utils import error_response, success_data_jsonify
 from configuration import app
 from flask import Flask, request, make_response
 import datetime
+import os
 
 
 # Flask views
@@ -89,7 +90,8 @@ def create_announcement():
     APPROVED_NUMBERS = ['+16502136962']
     body = request.form['Body']
     from_number = request.form['From']
-    if from_number in APPROVED_NUMBERS:
+    account_sid = request.form['AccountSid']
+    if from_number in APPROVED_NUMBERS and account_sid == os.environ['ACCOUNT_SID']:
         a = Announcement()
         a.message = body
         a.time = datetime.datetime.now()
