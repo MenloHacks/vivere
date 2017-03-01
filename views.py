@@ -87,12 +87,13 @@ def get_events():
 @app.route('/twilio/announcement', methods=['POST'])
 def create_announcement():
     APPROVED_NUMBERS = ['+16502136962']
-    body = request.args['Body']
-    from_number = request.args['From']
+    body = request.form['Body']
+    from_number = request.form['From']
     if from_number in APPROVED_NUMBERS:
         a = Announcement()
         a.message = body
         a.save()
+    return success_data_jsonify({})
 
 
 from authentication import *
