@@ -73,6 +73,7 @@ def get_announcements():
     return success_data_jsonify(list)
 
 
+
 @app.route('/events')
 #shouldn't be too many so I'll send them all at once.
 def get_events():
@@ -81,6 +82,17 @@ def get_events():
     for a in events:
         list.append(a.dictionary_representation())
     return success_data_jsonify(list)
+
+
+@app.route('/twilio/announcement', methods=['POST'])
+def create_announcement():
+    APPROVED_NUMBERS = ['+16502136962']
+    body = request.args['Body']
+    from_number = request.args['From']
+    if from_number in APPROVED_NUMBERS:
+        a = Announcement()
+        a.message = body
+        a.save()
 
 
 from authentication import *
