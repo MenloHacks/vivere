@@ -50,8 +50,8 @@ class Event(db.Document):
     location = db.ReferenceField(Location, required=False)
 
     def save(self):
-        send_event_update(event=self)
         super(Event, self).save()
+        send_event_update(event=self)
 
     def dictionary_representation(self):
         return {
@@ -76,11 +76,11 @@ class Announcement(db.Document):
 
 
     def save(self):
+        super(Announcement, self).save()
         if self.push_notification_sent == False:
             broadcast_apns(self)
             self.push_notification_sent = True
         send_announcement_update(announcement=self)
-        super(Announcement, self).save()
 
     def dictionary_representation(self):
         return {
@@ -171,8 +171,8 @@ class MentorTicket(db.Document):
     time_complete = db.DateTimeField()
 
     def save(self):
-        send_mentor_update(ticket=self)
         super(MentorTicket, self).save()
+        send_mentor_update(ticket=self)
 
     def dictionary_representation(self):
         current_time = datetime.datetime.now()
