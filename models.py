@@ -3,7 +3,7 @@ from configuration import db, app
 
 from flask import request
 import datetime
-from notification import send_announcement_update, send_event_update, send_mentor_update
+from notification import send_announcement_update, send_event_update, send_mentor_update, broadcast_apns
 
 class Location(db.Document):
     LOCATION_IMAGE_PATH = 'location/image/'
@@ -72,8 +72,13 @@ class Announcement(db.Document):
     message = db.StringField()
     time = db.DateTimeField(default=datetime.datetime.now())
 
+    push_notification_sent = db.BooleanField(default=False)
+
 
     def save(self):
+        if self.push_notification_sent == False:
+            broadcast_apns(self)
+            self.push_notification_sent = True
         send_announcement_update(announcement=self)
         super(Announcement, self).save()
 
