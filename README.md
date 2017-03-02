@@ -470,7 +470,7 @@ Successful queries will return a `200`. An example response is shown below.
 }
 ```
 
-Errors will be thrown if there is no logged in user or a ticket does not exist with the specified ID.
+Errors will be thrown if there is no logged in user, a ticket does not exist with the specified ID, or the ticket is already claimed.
 
 #### `POST mentorship/reopen`
 Re-open a previously claimed ticket. Also resets the time opened to give it an additional 30 minutes,
