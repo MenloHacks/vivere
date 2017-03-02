@@ -17,7 +17,6 @@ class Location(db.Document):
     def dictionary_representation(self):
         if request is not None and request.url_root:
             map_url = request.url_root + self.LOCATION_IMAGE_PATH + str(self.id)
-            map_url = map_url.replace('http', 'https')
             dictionary = {
                 'name' : self.name,
                 'map' : map_url,
