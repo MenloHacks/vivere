@@ -61,9 +61,10 @@ def get_announcements():
 
     if 'since_date' in request.args:
         cutoff = datetime.datetime.strptime(request.args['since_date'], "%Y-%m-%dT%H:%M:%S")
-        announcements = Announcement.objects(time__lte=datetime.datetime.now(), time__gt=cutoff).order_by('-time')
     else:
-        return error_response('Missing parameter since_date', code=400)
+        cutoff = datetime.datetime.fromtimestamp(0)
+
+    announcements = Announcement.objects(time__lte=datetime.datetime.now(), time__gt=cutoff).order_by('-time')
 
     list = []
     for a in announcements:
