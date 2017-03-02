@@ -91,20 +91,11 @@ def claimed_tickets():
 
 @app.route('/mentorship/queue')
 def get_tickets():
-    if 'start' in request.args:
-        start = int(request.args['start'])
-    else:
-        start = 0
-
-    if 'count' in request.args:
-        count = int(request.args['count'])
-    else:
-        count = 20
 
     current_time = datetime.datetime.now()
     expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
-    tickets = MentorTicket.objects(time_opened__gte=expiry_time, claimed_by=None, time_complete=None).order_by('time_created').skip(start).limit(count)
+    tickets = MentorTicket.objects(time_opened__gte=expiry_time, claimed_by=None, time_complete=None).order_by('time_created')
 
     tickets_list = []
     for t in tickets:
