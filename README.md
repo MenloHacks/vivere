@@ -343,10 +343,8 @@ Tickets older than 30 minutes are deemed expired and not included. Claimed or cl
 tickets are not included. Login is not required.
 
 ##### Parameters
-| Parameter Name| Description| Required| Default |
-| ------------- |-------------| -----  |  -----|
-| start| The next numbered ticket (chronologically ordered) to fetch | NO |0|
-| count | The number of tickets to fetch| NO |20|
+There are no parameters.
+
 
 An example successful response is shown below.
 ```json
