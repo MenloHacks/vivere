@@ -67,7 +67,16 @@ def get_announcements():
     else:
         count = 20
 
-    announcements = Announcement.objects(time__lte=datetime.datetime.now()).order_by('-time').skip(start).limit(count)
+    if 'since_date' in request.args:
+        cutoff = datetime.datetime.strptime(request.args['since_date'], "%Y-%m-%dT%H:%M:%S")
+        announcements = Announcement.objects(time__lte=datetime.datetime.now(), time__gt=cutoff).order_by('-time')
+    else:
+        announcements = Announcement.objects(time__lte=datetime.datetime.now()).order_by('-time').skip(start).limit(
+            count)
+
+
+
+
     list = []
     for a in announcements:
         list.append(a.dictionary_representation())
