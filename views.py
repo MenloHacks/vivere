@@ -57,25 +57,13 @@ def get_maps():
 
 @app.route('/announcements')
 def get_announcements():
-    if 'start' in request.args:
-        start = int(request.args['start'])
-    else:
-        start = 0
 
-    if 'count' in request.args:
-        count = int(request.args['count'])
-    else:
-        count = 20
 
     if 'since_date' in request.args:
         cutoff = datetime.datetime.strptime(request.args['since_date'], "%Y-%m-%dT%H:%M:%S")
         announcements = Announcement.objects(time__lte=datetime.datetime.now(), time__gt=cutoff).order_by('-time')
     else:
-        announcements = Announcement.objects(time__lte=datetime.datetime.now()).order_by('-time').skip(start).limit(
-            count)
-
-
-
+        return error_response('Missing parameter since_date', code=400)
 
     list = []
     for a in announcements:
