@@ -120,6 +120,9 @@ def claim_ticket():
         if user is None:
             return error_response("No current user logged in", code=401)
 
+        if ticket.claimed_by is not None:
+            return error_response('Ticket is already claimed', code=409)
+
         ticket.claimed_by = user
         ticket.time_claimed = datetime.datetime.now()
         ticket.save()
