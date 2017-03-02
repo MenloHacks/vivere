@@ -233,16 +233,14 @@ An example successful response returns an array of maps. An example is shown bel
 #### `GET announcements`
 Returns a list of announcements that have been made in reverse chronological order.
 Announcements can be made by event organizers by texting the MenloHacks phone number or
-using the MenloHacks Vivere admin site. Because the number of announcements could exceed a reasonable
-page limit, the announcement API is paginated.
+using the MenloHacks Vivere admin site. Announcements are always given since a specified date.
 
 ##### Parameters
 | Parameter Name| Description| Required| Default |
 | ------------- |-------------| -----  |  -----|
-| start| The next numbered announcement (reverse chronologically ordered) to fetch | NO |0|
-| count | The number of announcements to fetch| NO |20|
+| since_date| An ISO8601 formatted date for which all announcements after will be returned after the date. To get all announcements use the the UNIX epoch has this date | YES | N/A
 
-No errors are specified for this endpoint.
+An error will be returned if since_date is not provided..
 
 An example successful response is shown below.
 ```json
