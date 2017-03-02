@@ -238,7 +238,7 @@ using the MenloHacks Vivere admin site. Announcements are always given since a s
 ##### Parameters
 | Parameter Name| Description| Required| Default |
 | ------------- |-------------| -----  |  -----|
-| since_date| An ISO8601 formatted date for which all announcements after will be returned after the date. To get all announcements use the the UNIX epoch has this date | YES | N/A
+| since_date| An ISO8601 formatted date for which all announcements after will be returned after the date. To get all announcements use the the UNIX epoch has this date | NO | January 1, 1970–-the unix epoch.
 
 An error will be returned if since_date is not provided..
 
