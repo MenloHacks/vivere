@@ -42,7 +42,9 @@ def create_user():
 
 @app.route('/user/login', methods=['POST'])
 def login():
-    if request.json is None:
+    try:
+        request.get_json()
+    except:
         return error_response('Invalid format')
 
     if 'username' in request.json:
