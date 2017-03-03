@@ -42,18 +42,18 @@ def create_user():
 
 @app.route('/user/login', methods=['POST'])
 def login():
-    try:
-        request.get_json()
-    except:
-        return error_response('Invalid format')
 
-    if 'username' in request.json:
-        username = request.json['username']
+    json = request.get_json()
+    if json is None:
+        return error_response('Invalid format', code=400)
+
+    if 'username' in json:
+        username = json['username']
     else:
         error_response(message='Missing parameter username', code=400)
 
-    if 'password' in request.json:
-        password = request.json['password']
+    if 'password' in json:
+        password = json['password']
     else:
         return error_response(message='Missing parameter password', code=400)
 
