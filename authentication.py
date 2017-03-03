@@ -2,7 +2,7 @@ from flask_login import  LoginManager
 from configuration import app
 from models import User
 
-from flask import request
+from flask import request, cross_origin
 
 from utils import error_response, success_data_jsonify
 from flask import request
@@ -14,6 +14,7 @@ login_manager.init_app(app)
 
 
 @app.route('/user/create', methods=['POST'])
+@cross_origin()
 def create_user():
     username = request.json['username']
     password = request.json['password']
@@ -40,8 +41,8 @@ def create_user():
 
     return success_data_jsonify({'token' : token}, code=201)
 
-
 @app.route('/user/login', methods=['POST'])
+@cross_origin()
 def login():
     username = request.json['username']
     password = request.json['password']
