@@ -42,6 +42,11 @@ def create_user():
 
 @app.route('/user/login', methods=['POST'])
 def login():
+    try:
+        request.json
+    except:
+        return error_response('Invalid type')
+
     username = request.json['username']
     password = request.json['password']
 
