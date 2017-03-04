@@ -40,8 +40,8 @@ class Location(db.Document):
 
 
 class Event(db.Document):
-    start_time = db.DateTimeField(default=datetime.datetime.now())
-    end_time = db.DateTimeField(default=datetime.datetime.now())
+    start_time = db.DateTimeField(default=datetime.datetime.utcnow())
+    end_time = db.DateTimeField(default=datetime.datetime.utcnow())
 
     short_description = db.StringField()
     long_description = db.StringField()
@@ -69,7 +69,7 @@ class Event(db.Document):
 
 class Announcement(db.Document):
     message = db.StringField()
-    time = db.DateTimeField(default=datetime.datetime.now())
+    time = db.DateTimeField(default=datetime.datetime.utcnow())
 
     push_notification_sent = db.BooleanField(default=False)
 
@@ -170,8 +170,8 @@ class MentorTicket(db.Document):
     claimed_by = db.ReferenceField(User, required=False)
     created_by = db.ReferenceField(User)
 
-    time_created = db.DateTimeField(default=datetime.datetime.now())
-    time_opened = db.DateTimeField(default=datetime.datetime.now())
+    time_created = db.DateTimeField(default=datetime.datetime.utcnow())
+    time_opened = db.DateTimeField(default=datetime.datetime.utcnow())
     time_claimed = db.DateTimeField()
     time_complete = db.DateTimeField()
 
@@ -180,7 +180,7 @@ class MentorTicket(db.Document):
         send_mentor_update(ticket=self)
 
     def dictionary_representation(self):
-        current_time = datetime.datetime.now()
+        current_time = datetime.datetime.utcnow()
         expiry_time = self.time_opened + datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
         dictionary = {

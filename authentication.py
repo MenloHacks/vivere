@@ -4,7 +4,7 @@ from models import User
 
 from flask import request
 
-from utils import error_response, success_data_jsonify
+from utils import error_response, success_data_jsonify, invalid_format
 from flask import request
 from constants import AUTHORIZATION_HEADER_FIELD
 
@@ -15,20 +15,44 @@ login_manager.init_app(app)
 
 @app.route('/user/create', methods=['POST'])
 def create_user():
+    json = request.get_json()
+    if json is None:
+        return invalid_format()
+    if 'username' not in json:
+        return error_response(title="No email provided",
+                              message="To create an account, please provide your email",
+                              code=400)
+    if 'password' not in json:
+        return error_response(title="No password provided",
+                              message="To create an account, please provide a password",
+                              code=400)
+    if 'name' not in json:
+        return error_response(title="No name provided",
+                              message="To create an account, please provide your full name",
+                              code=400)
+
     username = request.json['username']
     password = request.json['password']
     name = request.json['name']
 
-    if username is None:
-        return error_response(message='Missing parameter username', code=400)
-    if password is None:
-        return error_response(message='Missing parameter password', code=400)
-    if name is None:
-        return error_response(message='Missing parameter name', code=400)
+    if len(username) == 0:
+        return error_response(title="Email is empty",
+                              message="To create an account, please provide your email",
+                              code=400)
+    if len(password) == 0:
+        return error_response(title="Password is empty",
+                              message="To create an account, please provide a password",
+                              code=400)
+    if len(name) == 0:
+        return error_response(title="Name is empty",
+                              message="To create an account, please provide your full name",
+                              code=400)
 
     user = User.objects(username=username).first()
     if user is not None:
-        return error_response(message='A user already exists with this username', code=400)
+        return error_response(title="User already exists",
+                              message="A user with this email address already exists. If you already have an account, plesae login instead.",
+                              code=400)
 
     user = User()
     user.username = username
@@ -42,26 +66,38 @@ def create_user():
 
 @app.route('/user/login', methods=['POST'])
 def login():
-
     json = request.get_json()
     if json is None:
-        return error_response('Invalid format', code=400)
+        return invalid_format()
 
-    if 'username' in json:
-        username = json['username']
-    else:
-        error_response(message='Missing parameter username', code=400)
+    if 'username' not in json:
+        return error_response(title='No email provided',
+                              message='To login, please provide an email',
+                              code=400)
 
-    if 'password' in json:
-        password = json['password']
-    else:
-        return error_response(message='Missing parameter password', code=400)
+    if 'password' not in json:
+        return error_response(title='No password provided',
+                              message='To login, please provide your password',
+                              code=400)
 
+    username = json['username']
+    password = json['password']
+
+    if len(username) == 0:
+        return error_response(title="Email is empty",
+                              message="To login, please provide your email",
+                              code=400)
+    if len(password) == 0:
+        return error_response(title="Password is empty",
+                              message="To login, please provide a password",
+                              code=400)
 
     user = User.objects(username=username).first()
 
     if user is None:
-        return error_response(message="No user exists with this username", code=404)
+        return error_response(title="No user exists with the specified email",
+                              message="If you mis-entered your email please try again. If you do not have an account, please find an organizer.",
+                              code=400)
 
     if User.validate_login(user.hashed_password, password):
         token = user.generate_auth_token()
@@ -71,7 +107,9 @@ def login():
         
         return success_data_jsonify(dictionary)
     else:
-        return error_response(message='Invalid password', code=401)
+        return error_response(title="Invalid password",
+                              message="The password you entered is not valid. If you forgot your password, please find an organizer.",
+                              code=401)
 
 
 from flask import render_template, url_for

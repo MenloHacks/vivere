@@ -26,6 +26,8 @@ def create_ticket():
     ticket.description = request.json['description']
     ticket.location = request.json['location']
     ticket.contact = request.json['contact']
+    ticket.time_created = datetime.datetime.utcnow()
+    ticket.time_opened = datetime.datetime.utcnow()
 
     ticket.created_by = user
 
@@ -39,7 +41,7 @@ def get_user_tickets():
     if user is None:
         return error_response('No logged in user', code=401)
     else:
-        current_time = datetime.datetime.now()
+        current_time = datetime.datetime.utcnow()
         expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
         open_tickets = MentorTicket.objects(time_opened__gte=expiry_time, claimed_by=None, created_by=user).order_by('-time_created')
@@ -92,7 +94,7 @@ def claimed_tickets():
 @app.route('/mentorship/queue')
 def get_tickets():
 
-    current_time = datetime.datetime.now()
+    current_time = datetime.datetime.utcnow()
     expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
     tickets = MentorTicket.objects(time_opened__gte=expiry_time, claimed_by=None, time_complete=None).order_by('time_created')
@@ -124,7 +126,7 @@ def claim_ticket():
             return error_response('Ticket is already claimed', code=409)
 
         ticket.claimed_by = user
-        ticket.time_claimed = datetime.datetime.now()
+        ticket.time_claimed = datetime.datetime.utcnow()
         ticket.save()
         return success_data_jsonify(ticket.dictionary_representation())
 
@@ -150,7 +152,7 @@ def reopen_ticket():
         if ticket.created_by == user or ticket.claimed_by == user:
             ticket.claimed_by = None
             ticket.time_complete = None
-            ticket.time_opened = datetime.datetime.now()
+            ticket.time_opened = datetime.datetime.utcnow()
             ticket.save()
             return success_data_jsonify(ticket.dictionary_representation())
         else:
@@ -171,7 +173,7 @@ def close_ticket():
             return error_response('No ticket with specified ID', code=404)
 
         if ticket.created_by == user or ticket.claimed_by == user:
-            ticket.time_complete = datetime.datetime.now()
+            ticket.time_complete = datetime.datetime.utcnow()
             return success_data_jsonify(ticket.dictionary_representation())
 
         else:

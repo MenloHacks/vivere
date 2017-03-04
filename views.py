@@ -64,7 +64,7 @@ def get_announcements():
     else:
         cutoff = datetime.datetime.fromtimestamp(0)
 
-    announcements = Announcement.objects(time__lte=datetime.datetime.now(), time__gt=cutoff).order_by('-time')
+    announcements = Announcement.objects(time__lte=datetime.datetime.utcnow(), time__gt=cutoff).order_by('-time')
 
     list = []
     for a in announcements:
@@ -92,7 +92,7 @@ def create_announcement():
     if from_number in APPROVED_NUMBERS and account_sid == os.environ['TWILIO_SID']:
         a = Announcement()
         a.message = body
-        a.time = datetime.datetime.now()
+        a.time = datetime.datetime.utcnow()
         a.save()
     return success_data_jsonify({})
 
