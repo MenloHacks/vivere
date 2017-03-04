@@ -30,3 +30,4 @@ urllib3==1.17
 wheel==0.24.0
 wsgiref==0.1.2
 flask-cors
+boto

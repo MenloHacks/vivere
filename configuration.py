@@ -7,6 +7,30 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
+
+import boto.s3.connection
+access_key = os.environ['S3_ACCESS_KEY']
+secret_key = os.environ['h3bJOmACI8vq1Ks4lO5oM6BipH+TNfCGDxtzaoEK']
+
+
+
+conn = boto.connect_s3(
+        aws_access_key_id = access_key,
+        aws_secret_access_key = secret_key,
+        host = 's3.amazonaws.com',
+        #is_secure=False,               # uncomment if you are not using ssl
+        calling_format = boto.s3.connection.OrdinaryCallingFormat(),
+        )
+
+bucket = conn.get_bucket('secure.menlohacks')
+key = bucket.get_key('menlohacks-passbook-key.pem')
+
+import os
+dir = os.path.dirname(__file__)
+filename = os.path.join(dir, 'secure/menlohacks-passbook-key.pem')
+
+key.get_contents_to_filename(filename)
+
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 CORS(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
