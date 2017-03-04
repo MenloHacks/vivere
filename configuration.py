@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 import boto.s3.connection
 access_key = os.environ['S3_ACCESS_KEY']
-secret_key = os.environ['h3bJOmACI8vq1Ks4lO5oM6BipH+TNfCGDxtzaoEK']
+secret_key = os.environ['S3_SECRET_KEY']
 
 
 
@@ -21,6 +21,8 @@ conn = boto.connect_s3(
         #is_secure=False,               # uncomment if you are not using ssl
         calling_format = boto.s3.connection.OrdinaryCallingFormat(),
         )
+
+
 
 bucket = conn.get_bucket('secure.menlohacks')
 key = bucket.get_key('menlohacks-passbook-key.pem')
