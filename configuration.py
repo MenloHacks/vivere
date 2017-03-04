@@ -6,13 +6,12 @@ import os
 from flask_cors import CORS
 
 app = Flask(__name__)
+import os
 
-
+#configure s3
 import boto.s3.connection
 access_key = os.environ['S3_ACCESS_KEY']
 secret_key = os.environ['S3_SECRET_KEY']
-
-
 
 conn = boto.connect_s3(
         aws_access_key_id = access_key,
@@ -23,13 +22,16 @@ conn = boto.connect_s3(
         )
 
 
+MENLOHACKS_BUCKET_NAME = 'secure.menlohacks'
+MENLOHACKS_PASSBOOK_FILENAME = 'menlohacks-passbook-key.pem'
 
-bucket = conn.get_bucket('secure.menlohacks')
-key = bucket.get_key('menlohacks-passbook-key.pem')
 
-import os
+bucket = conn.get_bucket(MENLOHACKS_BUCKET_NAME)
+key = bucket.get_key(MENLOHACKS_PASSBOOK_FILENAME)
+
 dir = os.path.dirname(__file__)
-filename = os.path.join(dir, 'secure/menlohacks-passbook-key.pem')
+path = 'secure/' + MENLOHACKS_PASSBOOK_FILENAME
+filename = os.path.join(dir, path)
 
 key.get_contents_to_filename(filename)
 
