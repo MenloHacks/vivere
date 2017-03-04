@@ -16,7 +16,7 @@ def error_response(title, message, code):
 
     error_dictionary = {'message' : message,
                         'title' : title}
-    
+
     response = jsonify({'success' : False,
                         'error' : error_dictionary
     })

@@ -69,7 +69,7 @@ Sample JSON
   "end_time": "2017-02-24T16:14:00",
   "id": "58acf4077a2f2e921896da2e",
   "location": `location_object`,
-  "long_description": "Sponsors unite!",
+  "long_description": "A fun thing",
   "short_description": "Opening Ceremony",
   "start_time": "2017-02-16T16:14:00"
 }
@@ -129,7 +129,10 @@ All successful responses will be formatted as shown in the example below.
 All error messages the server is expected to return will be formatted as follows.
 ```json
 {
-  "error": "some error message" ,
+  "error": {
+    "message" : "some message",
+    "title" : "some title"
+    } ,
   "success": false
 }
 ```
@@ -325,7 +328,7 @@ Successful requests will return code `201`. An example successful response is be
   "data": {
     "claimed": false,
     "contact": "hello@menlohacks.com",
-    "expired" : "false"
+    "expired" : "false",
     "description": "Django admin site isn't loading CSS",
     "id": "58b225be7a2f2e2a3702419a",
     "location": "Main gym, near the front",
