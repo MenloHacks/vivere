@@ -16,6 +16,7 @@ def error_response(title, message, code):
 
     error_dictionary = {'message' : message,
                         'title' : title}
+    
     response = jsonify({'success' : False,
                         'error' : error_dictionary
     })
@@ -30,5 +31,7 @@ def invalid_format():
                           code=400)
 
 def unauthorized_response():
-    return error_response('Invalid authentication token', code=403)
+    return error_response(title="No user is logged in",
+                          message="Please login to access this functionality",
+                          code=401)
 
