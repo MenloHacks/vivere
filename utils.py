@@ -23,15 +23,6 @@ def error_response(title, message, code):
 
     return response
 
-def error_response(message,code):
-
-    error_dictionary = {'message' : message}
-    response = jsonify({'success' : False,
-                        'error' : error_dictionary
-    })
-    response.status_code = code
-
-    return response
 
 def invalid_format():
     return error_response(title="Invalid request body",

@@ -6,6 +6,7 @@ from configuration import app
 from flask import Flask, request, make_response
 import datetime
 import os
+import bson
 
 
 # Flask views
@@ -26,21 +27,19 @@ def get_times():
 
 @app.route('/' + Location.LOCATION_IMAGE_PATH + '<location_id>')
 def serve_location_image(location_id):
-    success = True
-    try:
-        location = Location.objects(id=location_id).first()
-    except:
-        success = False
-
-    if success == False:
-        return error_response(message='Invalid object ID', code=400)
-
+    if not bson.objectid.ObjectId.is_valid(location_id):
+        return error_response(title="Invalid Location",
+                              message="The location you provided is not a valid location",
+                              code=400)
+    location = Location.objects(id=location_id).first()
     if location is None:
-        return error_response(message='Location not found', code=400)
-
-    response = make_response(location.map.read())
-    response.mimetype = location.map.content_type
-    return response
+        return error_response(title="Location not found",
+                              message="",
+                              code=404)
+    else:
+        response = make_response(location.map.read())
+        response.mimetype = location.map.content_type
+        return response
 
 
 @app.route('/maps')
