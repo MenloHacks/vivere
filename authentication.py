@@ -65,8 +65,11 @@ def login():
 
     if User.validate_login(user.hashed_password, password):
         token = user.generate_auth_token()
-        return success_data_jsonify({'name' : user.name,
-                                     'token' : token})
+
+        dictionary = user.dictionary_representation()
+        dictionary['token'] = token
+        
+        return success_data_jsonify(dictionary)
     else:
         return error_response(message='Invalid password', code=401)
 
