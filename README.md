@@ -175,7 +175,8 @@ Successful logins will return a `200` with a response similar to below.
 {
   "data": {
     "name": "Jason Scharff",
-    "token": "eyJhbGciOiJIUzI1NiIsImV4cCI6MTQ4ODA3MDk3OCwiaWF0IjoxNDg4MDY3Mzc4fQ.eyJ1c2VybmFtZSI6Imphc29uMyJ9.ix2vkW_W8POtrhM_vp5fi6caP9Fw08v2skYRmHQln4s"
+    "token": "eyJpYXQiOjE0ODg2MTE2NzMsImV4cCI6MTQ4ODcxOTY3MywiYWxnIjoiSFMyNTYifQ.eyJ1c2VybmFtZSI6Imphc29uIn0.EPr0fjSgn_0E3Zi5cdxegHZkK1WfvhSXGgNYfNKgb2I",
+    "username": "jason"
   },
   "success": true
 }
