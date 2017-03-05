@@ -217,7 +217,10 @@ def reopen_ticket():
                                   message="In order to close a ticket, you must either be the mentor or the mentee",
                                   code=403)
 
-        if ticket.claimed_by == None and ticket.time_complete == None:
+        current_time = datetime.datetime.utcnow()
+        expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
+
+        if ticket.claimed_by == None and ticket.time_complete == None and ticket.time_opened < expiry_time:
             return error_response(title="Cannot re-open this ticket",
                                   message="This ticket is currently open",
                                   code=403)
