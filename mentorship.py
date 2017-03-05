@@ -220,7 +220,7 @@ def reopen_ticket():
         current_time = datetime.datetime.utcnow()
         expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
-        if ticket.claimed_by == None and ticket.time_complete == None and ticket.time_opened < expiry_time:
+        if ticket.claimed_by == None and ticket.time_complete == None and ticket.time_opened > expiry_time:
             return error_response(title="Cannot re-open this ticket",
                                   message="This ticket is currently open",
                                   code=403)
