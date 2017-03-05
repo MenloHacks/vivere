@@ -23,8 +23,8 @@ def mark_expired():
     for t in expired_tickets:
         list.append(t.dictionary_representation())
 
-    if len(list) > 0:
-        send_mentor_expiration(list)
+
+    send_mentor_expiration(list)
 
     threading.Timer(60, mark_expired).start()
 
