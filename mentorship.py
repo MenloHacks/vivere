@@ -6,6 +6,30 @@ import datetime
 from authentication import current_user
 from utils import success_data_jsonify, error_response, invalid_format
 import bson
+import threading
+from notification import send_mentor_expiration
+
+
+
+def mark_expired():
+    current_time = datetime.datetime.utcnow()
+    expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
+    expiry_time_cutoff = current_time - datetime.timedelta(minutes=1)
+
+    expired_tickets = MentorTicket.objects(time_complete=None, time_opened__lt=expiry_time, time_opened__gte=expiry_time_cutoff,
+                                           claimed_by=None).order_by('-time_created')
+
+    list = []
+    for t in expired_tickets:
+        list.append(t.dictionary_representation())
+
+    if len(list) > 0:
+        send_mentor_expiration(list)
+
+    threading.Timer(60, mark_expired).start()
+
+
+mark_expired()
 
 @app.route('/mentorship/create', methods=['POST'])
 def create_ticket():

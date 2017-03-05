@@ -30,6 +30,8 @@ def send_announcement_update(announcement):
 def send_mentor_update(ticket):
     pusher_client.trigger(MENTOR_UPDATE, u'save', ticket.dictionary_representation())
 
+def send_mentor_expiration(tickets):
+    pusher_client.trigger(MENTOR_UPDATE, u'expire', tickets)
 
 
 
