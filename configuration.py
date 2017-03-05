@@ -23,14 +23,14 @@ conn = boto.connect_s3(
 
 
 MENLOHACKS_BUCKET_NAME = 'secure.menlohacks'
-MENLOHACKS_PASSBOOK_FILENAME = 'menlohacks-passbook-key.pem'
+MENLOHACKS_PASSBOOK_KEY_FILENAME = 'menlohacks-passbook-key.pem'
 
 
 bucket = conn.get_bucket(MENLOHACKS_BUCKET_NAME)
-key = bucket.get_key(MENLOHACKS_PASSBOOK_FILENAME)
+key = bucket.get_key(MENLOHACKS_PASSBOOK_KEY_FILENAME)
 
 dir = os.path.dirname(__file__)
-path = 'secure/' + MENLOHACKS_PASSBOOK_FILENAME
+path = 'secure/' + MENLOHACKS_PASSBOOK_KEY_FILENAME
 filename = os.path.join(dir, path)
 
 key.get_contents_to_filename(filename)
