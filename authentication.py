@@ -127,6 +127,8 @@ def current_user():
         return User.verify_auth_token(token)
     return None
 
+@app.route('/')
+
 @login_manager.user_loader
 def load_user(username):
 

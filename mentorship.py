@@ -192,11 +192,15 @@ def claim_ticket():
 
 @app.route('/mentorship/reopen', methods=['POST'])
 def reopen_ticket():
-    if 'id' not in request.json:
+    json = request.get_json()
+    if json is None:
+        return invalid_format()
+    if 'id' not in json:
         return error_response(title="No ticket provided.",
                               message="Please choose a ticket to claim",
                               code=400)
     else:
+        id = json['id']
         if not bson.objectid.ObjectId.is_valid(id):
             return error_response(title="Invalid Ticket ID",
                                   message="The ticket ID provided is not a valid ID",
@@ -239,6 +243,7 @@ def close_ticket():
                               message="Please specifiy a ticket to close",
                               code=401)
     else:
+        id = json['id']
         if not bson.objectid.ObjectId.is_valid(id):
             return error_response(title="Invalid Ticket ID",
                                   message="The ticket ID provided is not a valid ID",
