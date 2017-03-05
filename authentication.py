@@ -8,7 +8,7 @@ from flask import request, send_file
 from utils import error_response, success_data_jsonify, invalid_format
 from flask import request
 from constants import AUTHORIZATION_HEADER_FIELD
-#from passbook.models import Pass, Barcode, EventTicket, Location, BarcodeFormat
+from passbook.models import Pass, Barcode, EventTicket, Location, BarcodeFormat
 from configuration import MENLOHACKS_PASSBOOK_KEY_FILENAME
 
 
