@@ -31,3 +31,4 @@ wheel==0.24.0
 wsgiref==0.1.2
 flask-cors
 boto
+git+git://github.com/menlohacks/passbook.git/
