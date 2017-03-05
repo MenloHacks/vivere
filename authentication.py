@@ -15,6 +15,7 @@ from configuration import MENLOHACKS_PASSBOOK_KEY_FILENAME
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 @app.route('/user/ticket')
 def get_ticket():
     # user = current_user()
