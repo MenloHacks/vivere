@@ -263,6 +263,7 @@ def close_ticket():
 
         if ticket.created_by == user or ticket.claimed_by == user:
             ticket.time_complete = datetime.datetime.utcnow()
+            ticket.save()
             return success_data_jsonify(ticket.dictionary_representation())
 
         else:
