@@ -76,7 +76,7 @@ def get_user_tickets():
         current_time = datetime.datetime.utcnow()
         expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
-        open_tickets = MentorTicket.objects(time_opened__gte=expiry_time, claimed_by=None, created_by=user).order_by('-time_created')
+        open_tickets = MentorTicket.objects(time_opened__gte=expiry_time, claimed_by=None, created_by=user, time_opened__ne=None).order_by('-time_created')
         closed_tickets = MentorTicket.objects(time_complete__ne=None, created_by=user).order_by('-time_created')
         expired_tickets = MentorTicket.objects(time_complete=None, created_by=user, time_opened__lt=expiry_time, claimed_by=None).order_by('-time_created')
         in_progress_tickets = MentorTicket.objects(time_complete=None, created_by=user, claimed_by__ne=None).order_by('-time_created')
