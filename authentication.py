@@ -8,79 +8,81 @@ from flask import request, send_file
 from utils import error_response, success_data_jsonify, invalid_format
 from flask import request
 from constants import AUTHORIZATION_HEADER_FIELD
-#from passbook.models import Pass, Barcode, EventTicket, Location, BarcodeFormat
+from passbook.models import Pass, Barcode, EventTicket, Location, BarcodeFormat
 from configuration import MENLOHACKS_PASSBOOK_KEY_FILENAME
 
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# @app.route('/user/ticket', methods='GET')
-# def get_ticket():
-#     user = current_user()
-#     if user is None:
-#         return error_response(title="No user is currently logged in",
-#                               message="In get your ticket, you must be logged in",
-#                               code=401)
-#
-#     cardInfo = EventTicket()
-#     cardInfo.addPrimaryField('name', user.name, 'Name')
-#     cardInfo.addHeaderField('header', 'March 17-18, 2017', 'Menlo School')
-#
-#     cardInfo.addSecondaryField('loc', user.school, 'School')
-#     cardInfo.addSecondaryField('email', user.username, 'Email')
-#
-#     organizationName = 'MenloHacks'
-#     passTypeIdentifier = 'pass.com.menlohacks.menlohacks'
-#     teamIdentifier = '3R5J785EXT'
-#
-#     passfile = Pass(cardInfo, \
-#                     passTypeIdentifier=passTypeIdentifier, \
-#                     organizationName=organizationName, \
-#                     teamIdentifier=teamIdentifier)
-#
-#     passfile.labelColor = 'rgb(255,255,255)'
-#     passfile.foregroundColor = 'rgb(255,255,255)'
-#
-#     latitude = 37.453240
-#     longitude = -122.191278
-#
-#     location = Location(latitude, longitude)
-#     location.distance = 600
-#
-#     passfile.serialNumber = '1234567'
-#     passfile.locations = [location]
-#     passfile.barcode = Barcode(message='Barcode message', format=BarcodeFormat.QR)
-#
-#     dir = os.path.dirname(__file__)
-#
-#     passfile.addFile('icon.png', open(os.path.join(dir, 'passbook/icon.png'), 'r'))
-#     passfile.addFile('icon@2x.png', open(os.path.join(dir, 'passbook/icon@2x.png'), 'r'))
-#     passfile.addFile('icon@3x.png', open(os.path.join(dir, 'passbook/icon@3x.png'), 'r'))
-#
-#     passfile.addFile('logo.png', open(os.path.join(dir, 'passbook/logo.png'), 'r'))
-#     passfile.addFile('logo@2x.png', open(os.path.join(dir, 'passbook/logo@2x.png'), 'r'))
-#     passfile.addFile('logo@3x.png', open(os.path.join(dir, 'passbook/logo@3x.png'), 'r'))
-#
-#     passfile.addFile('background.png', open(os.path.join(dir, 'passbook/background.png'), 'r'))
-#     passfile.addFile('background@2x.png', open(os.path.join(dir, 'passbook/background@2x.png'), 'r'))
-#     passfile.addFile('background@3x.png', open(os.path.join(dir, 'passbook/background@3x.png'), 'r'))
-#
-#     key_path = 'secure/' + MENLOHACKS_PASSBOOK_KEY_FILENAME
-#
-#     key_filename = os.path.join(dir, key_path)
-#     cert_filename = os.path.join(dir, 'passbook/menlohacks-passbook-cert.pem')
-#     wwdr_filename = os.path.join(dir, 'passbook/WWDR.pem')
-#
-#     password = os.environ['PASSBOOK_PASSWORD']
-#
-#     file = passfile.create(cert_filename, key_filename, wwdr_filename, password)
-#
-#
-#
-#     return send_file(file, as_attachment=True,
-#                      attachment_filename='pass.pkpass',
-#                      mimetype='application/vnd.apple.pkpass')
+import shutil
+
+@app.route('/user/ticket')
+def get_ticket():
+    # user = current_user()
+    # if user is None:
+    #     return error_response(title="No user is currently logged in",
+    #                           message="In get your ticket, you must be logged in",
+    #                           code=401)
+
+    cardInfo = EventTicket()
+    cardInfo.addPrimaryField('name', 'Jason Scharff', 'Name')
+    cardInfo.addHeaderField('header', 'March 17-18, 2017', 'Menlo School')
+
+    cardInfo.addSecondaryField('loc', 'Menlo', 'School')
+    cardInfo.addSecondaryField('email', 'jasonscha', 'Email')
+
+    organizationName = 'MenloHacks'
+    passTypeIdentifier = 'pass.com.menlohacks.menlohacks'
+    teamIdentifier = '3R5J785EXT'
+
+    passfile = Pass(cardInfo, \
+                    passTypeIdentifier=passTypeIdentifier, \
+                    organizationName=organizationName, \
+                    teamIdentifier=teamIdentifier)
+
+    passfile.labelColor = 'rgb(255,255,255)'
+    passfile.foregroundColor = 'rgb(255,255,255)'
+
+    latitude = 37.453240
+    longitude = -122.191278
+
+    location = Location(latitude, longitude)
+    location.distance = 600
+
+    passfile.serialNumber = '1234567'
+    passfile.locations = [location]
+    passfile.barcode = Barcode(message='Barcode message', format=BarcodeFormat.QR)
+
+    dir = os.path.dirname(__file__)
+
+    passfile.addFile('icon.png', open(os.path.join(dir, 'passbook/icon.png'), 'r'))
+    passfile.addFile('icon@2x.png', open(os.path.join(dir, 'passbook/icon@2x.png'), 'r'))
+    passfile.addFile('icon@3x.png', open(os.path.join(dir, 'passbook/icon@3x.png'), 'r'))
+
+    passfile.addFile('logo.png', open(os.path.join(dir, 'passbook/logo.png'), 'r'))
+    passfile.addFile('logo@2x.png', open(os.path.join(dir, 'passbook/logo@2x.png'), 'r'))
+    passfile.addFile('logo@3x.png', open(os.path.join(dir, 'passbook/logo@3x.png'), 'r'))
+
+    passfile.addFile('background.png', open(os.path.join(dir, 'passbook/background.png'), 'r'))
+    passfile.addFile('background@2x.png', open(os.path.join(dir, 'passbook/background@2x.png'), 'r'))
+    passfile.addFile('background@3x.png', open(os.path.join(dir, 'passbook/background@3x.png'), 'r'))
+
+    key_path = 'secure/' + MENLOHACKS_PASSBOOK_KEY_FILENAME
+
+    key_filename = os.path.join(dir, key_path)
+    cert_filename = os.path.join(dir, 'passbook/menlohacks-passbook-cert.pem')
+    wwdr_filename = os.path.join(dir, 'passbook/WWDR.pem')
+
+    password = os.environ['PASSBOOK_PASSWORD']
+
+
+    file = passfile.create(cert_filename, key_filename, wwdr_filename, password)
+    file.seek(0)
+
+    return send_file(file, as_attachment=True,
+                     attachment_filename='pass.pkpass',
+                     mimetype='application/vnd.apple.pkpass')
 
 
 
