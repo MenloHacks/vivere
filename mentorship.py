@@ -14,7 +14,8 @@ from notification import send_mentor_expiration
 def mark_expired():
     current_time = datetime.datetime.utcnow()
     expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
-    expiry_time_cutoff = current_time - datetime.timedelta(minutes=1)
+    #in case we miss it for some reason
+    expiry_time_cutoff = expiry_time - datetime.timedelta(minutes=2)
 
     expired_tickets = MentorTicket.objects(time_complete=None, time_opened__lt=expiry_time, time_opened__gte=expiry_time_cutoff,
                                            claimed_by=None).order_by('-time_created')
@@ -26,7 +27,7 @@ def mark_expired():
 
     send_mentor_expiration(list)
 
-    threading.Timer(5, mark_expired).start()
+    threading.Timer(60, mark_expired).start()
 
 
 mark_expired()
