@@ -88,7 +88,7 @@ def create_ticket():
 
     ticket.save()
 
-    return success_data_jsonify(ticket.dictionary_representation(), code=201)
+    return success_data_jsonify(ticket.dictionary_representation(), code=200)
 
 @app.route('/mentorship/user/queue')
 def get_user_tickets():
