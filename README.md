@@ -389,30 +389,72 @@ An example successful response is shown below.
 ```json
 {
   "data": {
-    "closed": [],
-    "expired": [],
-    "in_progress": [
-      {
-        "claimed": true,
-        "contact": "hello@menlohacks.com",
-        "description": "Help, please",
-        "id": "58b22be07a2f2e2b2a26a40r",
-        "location": "MS Gym",
-        "expired" : false
-        "time_created": "2017-02-25T15:09:52.996000"
-      }
+    "categories": [
+      "open",
+      "in_progress",
+      "expired",
+      "closed"
     ],
-    "open": [
-      {
-        "claimed": false,
-        "expired" : false,
-        "contact": "hello@menlohacks.com",
-        "description": "Help, please",
-        "id": "58b22be07a2f2e2b2a26a40d",
-        "location": "MS Gym",
-        "time_created": "2017-02-25T15:09:51.996000"
-      }
-    ]
+    "tickets": {
+      "closed": [
+        {
+          "claimed": true,
+          "contact": "6502136962",
+          "description": "I'm having a problem with python",
+          "expired": true,
+          "id": "58bcc1d6d23aad0009291ff1",
+          "location": "Main gym",
+          "time_complete": "2017-03-06T03:31:42.759000",
+          "time_created": "2017-03-06T01:56:38.870000"
+        },
+        {
+          "claimed": false,
+          "contact": "3",
+          "description": "1",
+          "expired": true,
+          "id": "58bc8d1f0de457000913b883",
+          "location": "2",
+          "time_complete": "2017-03-06T03:31:45.951000",
+          "time_created": "2017-03-05T22:11:43.921000"
+        }
+      ],
+      "expired": [
+        {
+          "claimed": false,
+          "contact": "thomas",
+          "description": "Test Ticket",
+          "expired": true,
+          "id": "58bb2c2a085dd7000a262ca3",
+          "location": "Mars",
+          "time_complete": null,
+          "time_created": "2017-03-04T20:48:23.195000"
+        }
+      ],
+      "in_progress": [
+        {
+          "claimed": true,
+          "contact": "thomas",
+          "description": "testing after fix",
+          "expired": false,
+          "id": "58bb3429cf845c000add6ff3",
+          "location": "Mars",
+          "time_complete": null,
+          "time_created": "2017-03-04T21:39:53.532000"
+        }
+      ],
+      "open": [
+        {
+          "claimed": false,
+          "contact": "",
+          "description": "",
+          "expired": false,
+          "id": "58bb2b3d085dd7000a262ca2",
+          "location": "",
+          "time_complete": null,
+          "time_created": "2017-03-04T20:48:23.195000"
+        }
+      ]
+    }
   },
   "success": true
 }
