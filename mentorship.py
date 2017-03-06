@@ -128,6 +128,8 @@ def get_user_tickets():
             list.append(t.dictionary_representation())
         response['in_progress'] = list
 
+        response['categories'] = ['open', 'in_progress', 'expired', 'closed']
+
         return success_data_jsonify(response)
 
 
