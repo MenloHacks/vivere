@@ -26,7 +26,7 @@ def mark_expired():
 
     send_mentor_expiration(list)
 
-    threading.Timer(60, mark_expired).start()
+    threading.Timer(5, mark_expired).start()
 
 
 mark_expired()
