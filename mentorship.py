@@ -106,29 +106,34 @@ def get_user_tickets():
         expired_tickets = MentorTicket.objects(time_complete=None, created_by=user, time_opened__lt=expiry_time, claimed_by=None).order_by('-time_created')
         in_progress_tickets = MentorTicket.objects(time_complete=None, created_by=user, claimed_by__ne=None).order_by('-time_created')
 
-        response = {}
+        tickets = {}
 
         list = []
         for t in open_tickets:
             list.append(t.dictionary_representation())
-        response['open'] = list
+        tickets['open'] = list
 
         list = []
         for t in closed_tickets:
             list.append(t.dictionary_representation())
-        response['closed'] = list
+        tickets['closed'] = list
 
         list = []
         for t in expired_tickets:
             list.append(t.dictionary_representation())
-        response['expired'] = list
+        tickets['expired'] = list
 
         list = []
         for t in in_progress_tickets:
             list.append(t.dictionary_representation())
-        response['in_progress'] = list
+        tickets['in_progress'] = list
 
+
+        response = {}
+
+        response['tickets'] = tickets
         response['categories'] = ['open', 'in_progress', 'expired', 'closed']
+
 
         return success_data_jsonify(response)
 
