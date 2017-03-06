@@ -8,6 +8,7 @@ from utils import success_data_jsonify, error_response, invalid_format
 import bson
 import threading
 from notification import send_mentor_expiration
+import collections
 
 
 
@@ -106,7 +107,7 @@ def get_user_tickets():
         expired_tickets = MentorTicket.objects(time_complete=None, created_by=user, time_opened__lt=expiry_time, claimed_by=None).order_by('-time_created')
         in_progress_tickets = MentorTicket.objects(time_complete=None, created_by=user, claimed_by__ne=None).order_by('-time_created')
 
-        response = {}
+        response = collections.OrderedDict()
 
         list = []
         for t in open_tickets:
