@@ -1,4 +1,4 @@
-from models import Announcement, Event, Location, User
+from models import Announcement, Event, EventLocation, User
 from constants import EVENT_END_TIME, EVENT_START_TIME, HACKING_START_TIME, HACKING_END_TIME
 from utils import error_response, success_data_jsonify
 
@@ -25,7 +25,7 @@ def get_times():
     })
 
 
-@app.route('/' + Location.LOCATION_IMAGE_PATH + '<location_id>')
+@app.route('/' + EventLocation.LOCATION_IMAGE_PATH + '<location_id>')
 def serve_location_image(location_id):
     if not bson.objectid.ObjectId.is_valid(location_id):
         return error_response(title="Invalid Location",
@@ -44,7 +44,7 @@ def serve_location_image(location_id):
 
 @app.route('/maps')
 def get_maps():
-    locations = Location.objects(rank__gt=0).order_by('rank')
+    locations = EventLocation.objects(rank__gt=0).order_by('rank')
     list = []
 
     for l in locations:

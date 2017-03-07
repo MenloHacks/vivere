@@ -32,6 +32,7 @@ Clients cannot query information about a user directly.
 | time_created | The time the ticket was created |
 | claimed | Has the ticket been claimed? |
 | expired | Is the ticket expired |
+| is_mine| Did the current user create the ticket |
 
 
 Sample JSON
@@ -45,7 +46,8 @@ Sample JSON
     "location": "location",
     "time_complete": null,
     "time_created": "2017-02-25T15:55:05.978298",
-    "expired" : false
+    "expired" : false,
+    "is_mine" : true
 }
 ```
 

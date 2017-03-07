@@ -5,7 +5,7 @@ from flask import request
 import datetime
 from notification import send_announcement_update, send_event_update, send_mentor_update, broadcast_apns
 
-class Location(db.Document):
+class EventLocation(db.Document):
     LOCATION_IMAGE_PATH = 'location/image/'
     name = db.StringField()
 
@@ -46,7 +46,7 @@ class Event(db.Document):
     short_description = db.StringField()
     long_description = db.StringField()
 
-    location = db.ReferenceField(Location, required=False)
+    location = db.ReferenceField(EventLocation, required=False)
 
     def save(self):
         super(Event, self).save()
