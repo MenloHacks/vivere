@@ -3,6 +3,7 @@ from configuration import db, app
 
 from flask import request
 import datetime
+from authentication import current_user
 from notification import send_announcement_update, send_event_update, send_mentor_update, broadcast_apns
 
 class Location(db.Document):
@@ -183,6 +184,8 @@ class MentorTicket(db.Document):
         current_time = datetime.datetime.utcnow()
         expiry_time = self.time_opened + datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
+        user = current_user()
+
         dictionary = {
             'description' : self.description,
             'location' : self.location,
@@ -191,12 +194,14 @@ class MentorTicket(db.Document):
             'expired' : current_time > expiry_time,
             'time_created' : self.time_created.isoformat(),
             'id' : str(self.id),
+            'is_mine' : self.created_by == user
         }
 
         if self.time_complete is None:
             dictionary['time_complete'] = None
         else:
             dictionary['time_complete'] = self.time_complete.isoformat()
+
 
 
 
