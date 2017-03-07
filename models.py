@@ -3,7 +3,6 @@ from configuration import db, app
 
 from flask import request
 import datetime
-from authentication import current_user
 from notification import send_announcement_update, send_event_update, send_mentor_update, broadcast_apns
 
 class Location(db.Document):
@@ -100,6 +99,7 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 
 class User(db.Document):
+    from authentication import current_user
     username = db.StringField(unique=True)
     hashed_password = db.StringField()
 
