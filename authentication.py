@@ -195,6 +195,8 @@ def admin_login():
 
 
 def current_user():
+    if request is None:
+        return None
     if AUTHORIZATION_HEADER_FIELD in request.headers:
         token = request.headers[AUTHORIZATION_HEADER_FIELD]
         return User.verify_auth_token(token)
