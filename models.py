@@ -99,7 +99,6 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 
 class User(db.Document):
-    from authentication import current_user
     username = db.StringField(unique=True)
     hashed_password = db.StringField()
 
@@ -181,6 +180,8 @@ class MentorTicket(db.Document):
         send_mentor_update(ticket=self)
 
     def dictionary_representation(self):
+        from authentication import current_user
+
         current_time = datetime.datetime.utcnow()
         expiry_time = self.time_opened + datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
