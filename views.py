@@ -31,7 +31,7 @@ def serve_location_image(location_id):
         return error_response(title="Invalid Location",
                               message="The location you provided is not a valid location",
                               code=400)
-    location = Location.objects(id=location_id).first()
+    location = EventLocation.objects(id=location_id).first()
     if location is None:
         return error_response(title="Location not found",
                               message="",
