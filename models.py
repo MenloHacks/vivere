@@ -192,6 +192,7 @@ class MentorTicket(db.Document):
             'location' : self.location,
             'contact' : self.contact,
             'claimed' : self.claimed_by  != None,
+            'claimed_by_me' : self.claimed_by == user,
             'expired' : current_time > expiry_time,
             'time_created' : self.time_created.isoformat(),
             'id' : str(self.id),
