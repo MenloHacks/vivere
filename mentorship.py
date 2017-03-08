@@ -108,17 +108,10 @@ def get_user_tickets():
 
         tickets = {}
 
-        categories = []
-        missing = []
 
         list = []
         for t in open_tickets:
             list.append(t.dictionary_representation())
-
-        if len(list) > 0:
-            categories.append('open')
-        else:
-            missing.append('open')
 
         tickets['open'] = list
 
@@ -126,10 +119,6 @@ def get_user_tickets():
         for t in in_progress_tickets:
             list.append(t.dictionary_representation())
 
-        if len(list) > 0:
-            categories.append('in_progress')
-        else:
-            missing.append('in_progress')
 
         tickets['in_progress'] = list
 
@@ -137,10 +126,6 @@ def get_user_tickets():
         for t in expired_tickets:
             list.append(t.dictionary_representation())
 
-        if len(list) > 0:
-            categories.append('expired')
-        else:
-            missing.append('expired')
 
         tickets['expired'] = list
 
@@ -148,10 +133,7 @@ def get_user_tickets():
         for t in closed_tickets:
             list.append(t.dictionary_representation())
 
-        if len(list) > 0:
-            categories.append('closed')
-        else:
-            missing.append('closed')
+
 
         tickets['closed'] = list
 
@@ -160,10 +142,9 @@ def get_user_tickets():
 
         response = {}
 
-        categories.extend(missing)
 
         response['tickets'] = tickets
-        response['categories'] = categories
+        response['categories'] = ['open', 'in_progress', 'expired', 'closed']
 
 
         return success_data_jsonify(response)
