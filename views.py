@@ -57,7 +57,7 @@ def get_maps():
 CHALLENGE_WON = False
 
 @app.route('/admin/announcement', methods=['POST'])
-def create_announcement():
+def create_announcement_challenge():
     global CHALLENGE_WON
     user = current_user()
     if user is None:
