@@ -73,7 +73,7 @@ def create_announcement():
                               message="You need to provide a body",
                               code=400)
 
-    if user.username == 'jason' and CHALLENGE_WON == False:
+    if user.username == 'jason' and CHALLENGE_WON is False:
         a = Announcement()
         a.message = json['body']
         a.time = datetime.datetime.utcnow()
