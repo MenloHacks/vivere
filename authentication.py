@@ -44,6 +44,8 @@ def get_ticket():
     passfile.labelColor = 'rgb(255,255,255)'
     passfile.foregroundColor = 'rgb(255,255,255)'
 
+    passfile.relevantDate = '2017-03-17T16:00-07:00'
+
     latitude = 37.453240
     longitude = -122.191278
 
