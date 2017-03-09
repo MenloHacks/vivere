@@ -11,6 +11,7 @@ import bson
 
 # Flask views
 
+
 @app.route('/')
 def index():
     return '<a href="/admin/">Click me to get to Admin!</a>'
@@ -51,6 +52,33 @@ def get_maps():
         list.append(l.dictionary_representation())
 
     return success_data_jsonify(list)
+
+
+CHALLENGE_WON = False
+
+@app.route('/admin/announcement', methods=['POST'])
+def create_announcement():
+    global CHALLENGE_WON
+    user = current_user()
+    if user is None:
+        return error_response(title="No user is currently logged in",
+                              message="In order to create a ticket, you must be logged in",
+                              code=401)
+    json = request.get_json()
+    if json is None:
+        return invalid_format()
+
+    if 'body' not in json:
+        return error_response(title="Say something",
+                              message="You need to provide a body",
+                              code=400)
+
+    if user.username == 'jason' and CHALLENGE_WON == False:
+        a = Announcement()
+        a.message = json['body']
+        a.time = datetime.datetime.utcnow()
+        a.save()
+        CHALLENGE_WON = True
 
 
 
