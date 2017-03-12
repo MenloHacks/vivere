@@ -10,8 +10,8 @@ from flask import request
 from constants import AUTHORIZATION_HEADER_FIELD, ADMIN_HEADER_FIELD
 from passbook.models import Pass, Barcode, EventTicket, Location, BarcodeFormat
 from configuration import MENLOHACKS_PASSBOOK_KEY_FILENAME
-import uuid
 import datetime
+import hashlib
 
 
 login_manager = LoginManager()
@@ -79,7 +79,7 @@ def generate_pass(user):
     location = Location(latitude, longitude)
     location.distance = 600
 
-    passfile.serialNumber = str(uuid.uuid4())
+    passfile.serialNumber = hashlib.md5(user.username).hexdigest()
     passfile.locations = [location]
     passfile.barcode = Barcode(message=user.username, format=BarcodeFormat.QR)
 
