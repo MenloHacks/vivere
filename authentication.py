@@ -114,7 +114,7 @@ def generate_pass(user):
                      mimetype='application/vnd.apple.pkpass')
 
 
-@app.route('/user/checkin', methods='POST')
+@app.route('/user/checkin', methods=['POST'])
 def check_in_user():
     json = request.get_json()
     if json is None:
