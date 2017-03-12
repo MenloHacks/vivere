@@ -108,7 +108,9 @@ class User(db.Document):
     photo_form_url = db.StringField()
     liability_form_url = db.StringField()
 
-    dietary_restrictions = db.StringField()
+    tshirt_size = db.StringField()
+
+    check_in_time = db.DateTimeField()
 
     is_admin = db.BooleanField(default=False)
 
