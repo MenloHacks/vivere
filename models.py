@@ -120,6 +120,15 @@ class User(db.Document):
             'name' : self.name
         }
 
+    def check_in_dictionary_representation(self):
+        return {
+            'username' : self.username,
+            'name' : self.name,
+            'tshirt_size' : self.tshirt_size,
+            'photo_form' : self.photo_form_url,
+            'liability_form' : self.liability_form_url,
+        }
+
     def is_authenticated(self):
         return True
 
@@ -135,7 +144,7 @@ class User(db.Document):
     def set_password(self, password):
         self.hashed_password = django_pbkdf2_sha256.using(rounds=3000).hash(password)
 
-    def generate_auth_token(self, expiration=108000):
+    def generate_auth_token(self, expiration=604800):
         s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
         return s.dumps({ 'username': self.username })
 
