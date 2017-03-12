@@ -79,7 +79,7 @@ def generate_pass(user):
     location = Location(latitude, longitude)
     location.distance = 600
 
-    passfile.serialNumber = hashlib.md5(user.username).hexdigest()
+    passfile.serialNumber = hashlib.sha256(user.username).hexdigest()
     passfile.locations = [location]
     passfile.barcode = Barcode(message=user.username, format=BarcodeFormat.QR)
 
