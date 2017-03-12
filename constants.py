@@ -7,6 +7,7 @@ HACKING_START_TIME = datetime.datetime(year=2017, month=3, day=18, hour=1)
 HACKING_END_TIME = datetime.datetime(year=2017, month=3, day=18, hour=23)
 
 AUTHORIZATION_HEADER_FIELD = 'X-MenloHacks-Authorization'
+ADMIN_HEADER_FIELD = 'X-MenloHacks-Admin'
 
 ALL_DEVICES_APNS = 'com.vivere.all_devices'
 ANNOUNCEMENT_UPDATE = u'com.vivere.announcement.update'

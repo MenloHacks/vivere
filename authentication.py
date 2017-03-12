@@ -7,14 +7,38 @@ from flask import request, send_file
 
 from utils import error_response, success_data_jsonify, invalid_format
 from flask import request
-from constants import AUTHORIZATION_HEADER_FIELD
+from constants import AUTHORIZATION_HEADER_FIELD, ADMIN_HEADER_FIELD
 from passbook.models import Pass, Barcode, EventTicket, Location, BarcodeFormat
 from configuration import MENLOHACKS_PASSBOOK_KEY_FILENAME
 import uuid
+import datetime
 
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+
+@app.route('/user/ticket/<username>')
+def get_ticket_admin(username):
+    if ADMIN_HEADER_FIELD not in request.headers:
+        return error_response(title="No password",
+                              message='To check in a user, please provide the admin password',
+                              code=401)
+    password = request.headers[ADMIN_HEADER_FIELD]
+
+    if password != os.environ['ADMIN_PASSWORD']:
+        return error_response(title="Invalid password",
+                              message='To check in a user, please provide the admin password',
+                              code=401)
+
+    user = User.objects(username=username).first()
+    if user is None:
+        return error_response(title="No user",
+                              message='A user does not exist with this username',
+                              code=404)
+
+    return generate_pass(user)
+
 
 
 @app.route('/user/ticket')
@@ -24,7 +48,10 @@ def get_ticket():
         return error_response(title="No user is currently logged in",
                               message="In get your ticket, you must be logged in",
                               code=401)
+    return generate_pass(user)
 
+
+def generate_pass(user):
     cardInfo = EventTicket()
     cardInfo.addPrimaryField('name', user.name, 'Name')
     cardInfo.addHeaderField('header', 'March 17-18, 2017', 'Menlo School')
@@ -85,6 +112,50 @@ def get_ticket():
     return send_file(file, as_attachment=True,
                      attachment_filename='pass.pkpass',
                      mimetype='application/vnd.apple.pkpass')
+
+
+@app.route('/user/checkin', methods='POST')
+def check_in_user():
+    json = request.get_json()
+    if json is None:
+        return invalid_format()
+
+    if ADMIN_HEADER_FIELD not in request.headers:
+        return error_response(title="No password",
+                              message='To check in a user, please provide the admin password',
+                              code=401)
+
+    if 'username' not in json:
+        return error_response(title="No username provided",
+                              message='To check in a user, please provide the username of the user to check in',
+                              code=400)
+
+    username = json['username']
+    password = request.headers[ADMIN_HEADER_FIELD]
+
+    if os.environ['ADMIN_PASSWORD'] != password:
+        return error_response(title="Invalid password",
+                              message='To check in a user, please provide the correct shared password',
+                              code=401)
+
+    user = User.objects(username=username).first()
+    if user is None:
+        return error_response(title="User does not exist",
+                              message='The specified user does not exist.',
+                              code=404)
+
+    if user.check_in_time is not None:
+            return error_response(title="Already checked in",
+                                  message='The user specified is already checked in. Please see an organizer.',
+                                  code=409)
+
+    user.check_in_time = datetime.datetime.utcnow()
+    user.save()
+
+    return success_data_jsonify(user.check_in_dictionary_representation(), code=200)
+
+
+
 
 
 
