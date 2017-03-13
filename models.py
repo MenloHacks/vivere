@@ -53,19 +53,14 @@ class Event(db.Document):
         send_event_update(event=self)
 
     def dictionary_representation(self):
-        dictionary = {
+        return {
             'start_time' : self.start_time.isoformat(),
+            'end_time' : self.end_time.isoformat(),
             'short_description' : self.short_description,
             'long_description' : self.long_description,
             'location' : self.location.dictionary_representation(),
             'id' : str(self.id)
         }
-        if self.end_time is not None:
-            dictionary['end_time'] = self.end_time.isoformat()
-        else:
-            dictionary['end_time'] = None
-
-        return dictionary
 
 
     def __unicode__(self):
