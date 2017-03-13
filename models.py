@@ -41,7 +41,7 @@ class EventLocation(db.Document):
 
 class Event(db.Document):
     start_time = db.DateTimeField(default=datetime.datetime.utcnow())
-    end_time = db.DateTimeField(default=datetime.datetime.utcnow())
+    end_time = db.DateTimeField()
 
     short_description = db.StringField()
     long_description = db.StringField()
