@@ -1,4 +1,4 @@
-from flask_login import  LoginManager
+import flask_login as login
 from configuration import app
 from models import User
 import os
@@ -13,9 +13,6 @@ from configuration import MENLOHACKS_PASSBOOK_KEY_FILENAME
 import datetime
 import hashlib
 
-
-login_manager = LoginManager()
-login_manager.init_app(app)
 
 
 @app.route('/user/ticket/<username>')
@@ -275,13 +272,4 @@ def current_user():
         return User.verify_auth_token(token)
     return None
 
-@app.route('/')
 
-@login_manager.user_loader
-def load_user(username):
-
-    user = User.objects(username=username).first()
-    if not user:
-        return None
-    else:
-        return user

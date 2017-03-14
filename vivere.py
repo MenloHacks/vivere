@@ -1,24 +1,34 @@
 import flask_admin as admin
 from flask_admin.contrib.mongoengine import ModelView
+import flask_login as login
 import os
 
 from configuration import *
 
 from views import *
 
-admin = admin.Admin(app, 'MenloHacks Vivere')
+
+from admin_login_manager import *
+admin = admin.Admin(app, 'MenloHacks Vivere', index_view=SecureAdminIndexView(), base_template='my_master.html')
 
 from models import Announcement, Event, EventLocation, MentorTicket
 
+
+class SecureModelView(ModelView):
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated and login.current_user.is_admin
+
     # Add views
-admin.add_views(ModelView(Announcement))
-admin.add_view(ModelView(Event))
-admin.add_views(ModelView(EventLocation))
-admin.add_views(ModelView(User))
-admin.add_views(ModelView(MentorTicket))
+admin.add_views(SecureModelView(Announcement))
+admin.add_view(SecureModelView(Event))
+admin.add_views(SecureModelView(EventLocation))
+admin.add_views(SecureModelView(User))
+admin.add_views(SecureModelView(MentorTicket))
 
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
+
 
