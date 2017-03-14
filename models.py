@@ -169,6 +169,12 @@ class User(db.Document):
     def __unicode__(self):
         return self.username
 
+    meta = {
+        'indexes': [
+            {'fields': ['username'], 'unique': True}
+        ]
+    }
+
 class MentorTicket(db.Document):
 
     EXPIRATION_TIME = 1800 #automatically expire after 30 minutes.
