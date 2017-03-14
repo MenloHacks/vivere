@@ -53,8 +53,10 @@ def generate_db():
 
             school = row['school']
             tshirt = row['t_shirt_size']
+            name = row['name']
 
             user.school = school
+            user.name = name
             user.tshirt_size = tshirt
 
             user.save()
