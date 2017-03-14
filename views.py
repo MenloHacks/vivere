@@ -14,7 +14,7 @@ import bson
 
 @app.route('/')
 def index():
-    return '<a href="/admin/">Click me to get to Admin!</a>'
+    return 'Welcome to MenloHacks Vivere.'
 
 @app.route('/times')
 def get_times():
