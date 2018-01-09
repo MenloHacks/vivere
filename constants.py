@@ -1,16 +1,16 @@
 import datetime
 
-EVENT_START_TIME = datetime.datetime(year=2017, month=3, day=17, hour=23, minute=15)
-EVENT_END_TIME = datetime.datetime(year=2017, month=3, day=19, hour=1)
+EVENT_START_TIME = datetime.datetime(year=2018, month=3, day=10, hour=10)
+EVENT_END_TIME = datetime.datetime(year=2018, month=3, day=11, hour=14, minute=15)
 
-HACKING_START_TIME = datetime.datetime(year=2017, month=3, day=18, hour=1)
-HACKING_END_TIME = datetime.datetime(year=2017, month=3, day=18, hour=23)
+HACKING_START_TIME = datetime.datetime(year=2018, month=3, day=10, hour=12)
+HACKING_END_TIME = datetime.datetime(year=2018, month=3, day=11, hour=12)
 
 AUTHORIZATION_HEADER_FIELD = 'X-MenloHacks-Authorization'
 ADMIN_HEADER_FIELD = 'X-MenloHacks-Admin'
 
-ALL_DEVICES_APNS = 'com.vivere.all_devices'
-ANNOUNCEMENT_UPDATE = u'com.vivere.announcement.update'
-MENTOR_UPDATE = u'com.vivere.mentor.update'
-EVENT_UPDATE = u'com.vivere.event.update'
+ALL_DEVICES_APNS = u'com.vivereiii.all_devices'
+ANNOUNCEMENT_UPDATE = u'com.vivereiii.announcement.update'
+MENTOR_UPDATE = u'com.vivereiii.mentor.update'
+EVENT_UPDATE = u'com.vivereiii.event.update'
 

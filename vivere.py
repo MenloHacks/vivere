@@ -4,6 +4,9 @@ import flask_login as login
 import os
 
 from configuration import *
+from werkzeug.contrib.fixers import ProxyFix
+
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 from views import *
 
@@ -27,8 +30,7 @@ admin.add_views(SecureModelView(User))
 admin.add_views(SecureModelView(MentorTicket))
 
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+# if __name__ == '__main__':
+#     app.run()
 
 

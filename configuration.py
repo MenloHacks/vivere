@@ -13,17 +13,19 @@ import boto.s3.connection
 access_key = os.environ['S3_ACCESS_KEY']
 secret_key = os.environ['S3_SECRET_KEY']
 
-conn = boto.connect_s3(
+
+conn = boto.s3.connect_to_region(
+        'us-west-1',
         aws_access_key_id = access_key,
         aws_secret_access_key = secret_key,
         host = 's3.amazonaws.com',
         #is_secure=False,               # uncomment if you are not using ssl
-        calling_format = boto.s3.connection.OrdinaryCallingFormat(),
+        #calling_format = boto.s3.connection.OrdinaryCallingFormat(),
         )
 
 
-MENLOHACKS_BUCKET_NAME = 'secure.menlohacks'
-MENLOHACKS_PASSBOOK_KEY_FILENAME = 'menlohacks-passbook-key.pem'
+MENLOHACKS_BUCKET_NAME = 'menlohacksiii'
+MENLOHACKS_PASSBOOK_KEY_FILENAME = 'key.pem'
 
 
 bucket = conn.get_bucket(MENLOHACKS_BUCKET_NAME)
@@ -39,10 +41,7 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 CORS(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
-if 'SECRET_KEY' in os.environ:
-    app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
-else:
-    app.config['SECRET_KEY'] = '123456790'
+app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 
 
 # Create models

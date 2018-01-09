@@ -4,6 +4,8 @@ from configuration import db, app
 from flask import request
 import datetime
 from notification import send_announcement_update, send_event_update, send_mentor_update, broadcast_apns
+from pbkdf2 import pbkdf2_hex
+import os, binascii
 
 class EventLocation(db.Document):
     LOCATION_IMAGE_PATH = 'location/image/'
@@ -16,7 +18,7 @@ class EventLocation(db.Document):
 
     def dictionary_representation(self):
         if request is not None and request.url_root:
-            map_url = request.url_root + self.LOCATION_IMAGE_PATH + str(self.id)
+            map_url = "https://api.menlohacks.com/" + self.LOCATION_IMAGE_PATH + str(self.id)
             dictionary = {
                 'name' : self.name,
                 'map' : map_url,
@@ -69,7 +71,7 @@ class Event(db.Document):
 
 class Announcement(db.Document):
     message = db.StringField()
-    time = db.DateTimeField(default=datetime.datetime.utcnow())
+    time = db.DateTimeField(default=datetime.datetime.now())
 
     push_notification_sent = db.BooleanField(default=False)
 
@@ -142,7 +144,12 @@ class User(db.Document):
         return self.username
 
     def set_password(self, password):
-        self.hashed_password = django_pbkdf2_sha256.using(rounds=3000).hash(password)
+        prefix = "pbkdf2_hex"
+        salt = binascii.b2a_hex(os.urandom(64))
+        rounds = 10000
+        hashed = pbkdf2_hex(str(password), str(salt.decode("hex")), rounds, 64)
+
+        self.hashed_password = "$".join([str(prefix), str(rounds), str(hashed), str(salt)])
 
     def generate_auth_token(self, expiration=604800):
         s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
@@ -164,7 +171,8 @@ class User(db.Document):
 
     @staticmethod
     def validate_login(password_hash, password):
-        return django_pbkdf2_sha256.verify(password, password_hash)
+        password_components = password_hash.split("$")
+        return pbkdf2_hex(str(password), str(password_components[3].decode("hex")), int(password_components[1]), 64) == str(password_components[2])
 
     def __unicode__(self):
         return self.username

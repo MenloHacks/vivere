@@ -24,12 +24,15 @@ def generate_db():
     with open(user_location, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            username = row['username']
+            username = row['email']
             user = User.objects(username=username).first()
             if user is None:
                 user = User()
+            if username == "thomas@menlohacks.com":
+                user.is_admin = True
 
             password = row['password']
+
 
             user_id = row['id']
             username_dictionary[user_id] = username
@@ -43,7 +46,7 @@ def generate_db():
         reader = csv.DictReader(f)
         for row in reader:
 
-            user_id = row['user_id']
+            user_id = row['user']
             username = username_dictionary[user_id]
 
             user = User.objects(username=username).first()
@@ -52,8 +55,8 @@ def generate_db():
                 break
 
             school = row['school']
-            tshirt = row['t_shirt_size']
-            name = row['name']
+            tshirt = row['shirt size']
+            name = row['first name'] + " " + row['last name']
 
             user.school = school
             user.name = name
@@ -64,7 +67,7 @@ def generate_db():
     with open(application_location, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            user_id = row['user_id']
+            user_id = row['user']
             username = username_dictionary[user_id]
 
             user = User.objects(username=username).first()
@@ -72,10 +75,14 @@ def generate_db():
             if user is None:
                 break
 
-            liability = row['form_url']
-            photo_form = row['photo_form_url']
+            liability = row['liability form']
+            photo_form = row['photo form']
 
             user.liability_form_url = liability
             user.photo_form_url = photo_form
 
             user.save()
+
+
+if __name__ == "__main__":
+    generate_db()

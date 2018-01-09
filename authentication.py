@@ -51,24 +51,24 @@ def get_ticket():
 def generate_pass(user):
     cardInfo = EventTicket()
     cardInfo.addPrimaryField('name', user.name, 'Name')
-    cardInfo.addHeaderField('header', 'March 17-18, 2017', 'Menlo School')
+    cardInfo.addHeaderField('header', 'March 10-11, 2018', 'Menlo School')
 
     cardInfo.addSecondaryField('loc', user.school, 'School')
     cardInfo.addSecondaryField('email', user.username, 'Email')
 
     organizationName = 'MenloHacks'
-    passTypeIdentifier = 'pass.com.menlohacks.menlohacks'
-    teamIdentifier = '3R5J785EXT'
+    passTypeIdentifier = 'pass.com.menlohacks.menlohacksiii'
+    teamIdentifier = 'YWVU2284UC'
 
-    passfile = Pass(cardInfo, \
-                    passTypeIdentifier=passTypeIdentifier, \
-                    organizationName=organizationName, \
+    passfile = Pass(cardInfo,
+                    passTypeIdentifier=passTypeIdentifier,
+                    organizationName=organizationName,
                     teamIdentifier=teamIdentifier)
 
     passfile.labelColor = 'rgb(255,255,255)'
     passfile.foregroundColor = 'rgb(255,255,255)'
 
-    passfile.relevantDate = '2017-03-17T16:00-07:00'
+    passfile.relevantDate = '2018-03-10T10:00-01:00'
 
     latitude = 37.453240
     longitude = -122.191278
@@ -97,7 +97,7 @@ def generate_pass(user):
     key_path = 'secure/' + MENLOHACKS_PASSBOOK_KEY_FILENAME
 
     key_filename = os.path.join(dir, key_path)
-    cert_filename = os.path.join(dir, 'passbook/menlohacks-passbook-cert.pem')
+    cert_filename = os.path.join(dir, 'passbook/certificate.pem')
     wwdr_filename = os.path.join(dir, 'passbook/WWDR.pem')
 
     password = os.environ['PASSBOOK_PASSWORD']
