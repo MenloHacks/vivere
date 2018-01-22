@@ -54,32 +54,6 @@ def get_maps():
     return success_data_jsonify(list)
 
 
-CHALLENGE_WON = False
-
-@app.route('/admin/announcement', methods=['POST'])
-def create_announcement_challenge():
-    global CHALLENGE_WON
-    user = current_user()
-    if user is None:
-        return error_response(title="No user is currently logged in",
-                              message="In order to create a ticket, you must be logged in",
-                              code=401)
-    json = request.get_json()
-    if json is None:
-        return invalid_format()
-
-    if 'body' not in json:
-        return error_response(title="Say something",
-                              message="You need to provide a body",
-                              code=400)
-
-    if user.username == 'jason' and CHALLENGE_WON is False:
-        a = Announcement()
-        a.message = json['body']
-        a.time = datetime.datetime.utcnow()
-        a.save()
-        CHALLENGE_WON = True
-
 
 
 @app.route('/announcements')
@@ -91,7 +65,7 @@ def get_announcements():
     else:
         cutoff = datetime.datetime.fromtimestamp(0)
 
-    announcements = Announcement.objects(time__lte=datetime.datetime.utcnow(), time__gt=cutoff).order_by('-time')
+    announcements = Announcement.objects(time__lte=datetime.datetime.now(), time__gt=cutoff).order_by('-time')
 
     list = []
     for a in announcements:
@@ -119,7 +93,7 @@ def create_announcement():
     if from_number in APPROVED_NUMBERS and account_sid == os.environ['TWILIO_SID']:
         a = Announcement()
         a.message = body
-        a.time = datetime.datetime.utcnow()
+        a.time = datetime.datetime.now()
         a.save()
     return success_data_jsonify({})
 

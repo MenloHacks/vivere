@@ -146,7 +146,7 @@ def check_in_user():
                                   message='The user specified is already checked in. Please see an organizer.',
                                   code=409)
 
-    user.check_in_time = datetime.datetime.utcnow()
+    user.check_in_time = datetime.datetime.now()
     user.save()
 
     return success_data_jsonify(user.check_in_dictionary_representation(), code=200)

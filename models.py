@@ -42,8 +42,8 @@ class EventLocation(db.Document):
 
 
 class Event(db.Document):
-    start_time = db.DateTimeField(default=datetime.datetime.utcnow())
-    end_time = db.DateTimeField(default=datetime.datetime.utcnow())
+    start_time = db.DateTimeField(default=datetime.datetime.now())
+    end_time = db.DateTimeField(default=datetime.datetime.now())
 
     short_description = db.StringField()
     long_description = db.StringField()
@@ -185,7 +185,7 @@ class User(db.Document):
 
 class MentorTicket(db.Document):
 
-    EXPIRATION_TIME = 1800 #automatically expire after 30 minutes.
+    EXPIRATION_TIME = 3600 #automatically expire after 60 minutes.
 
     description = db.StringField()
     location = db.StringField()
@@ -195,8 +195,8 @@ class MentorTicket(db.Document):
     claimed_by = db.ReferenceField(User, required=False)
     created_by = db.ReferenceField(User)
 
-    time_created = db.DateTimeField(default=datetime.datetime.utcnow())
-    time_opened = db.DateTimeField(default=datetime.datetime.utcnow())
+    time_created = db.DateTimeField(default=datetime.datetime.now())
+    time_opened = db.DateTimeField(default=datetime.datetime.now())
     time_claimed = db.DateTimeField()
     time_complete = db.DateTimeField()
 
@@ -207,7 +207,7 @@ class MentorTicket(db.Document):
     def dictionary_representation(self):
         from authentication import current_user
 
-        current_time = datetime.datetime.utcnow()
+        current_time = datetime.datetime.now()
         expiry_time = self.time_opened + datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
         user = current_user()

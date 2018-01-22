@@ -12,7 +12,7 @@ from notification import send_mentor_expiration
 
 
 def mark_expired():
-    current_time = datetime.datetime.utcnow()
+    current_time = datetime.datetime.now()
     expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
     #in case we miss it for some reason
     expiry_time_cutoff = expiry_time - datetime.timedelta(minutes=2)
@@ -81,8 +81,8 @@ def create_ticket():
     ticket.description = description
     ticket.location = location
     ticket.contact = contact
-    ticket.time_created = datetime.datetime.utcnow()
-    ticket.time_opened = datetime.datetime.utcnow()
+    ticket.time_created = datetime.datetime.now()
+    ticket.time_opened = datetime.datetime.now()
 
     ticket.created_by = user
 
@@ -98,7 +98,7 @@ def get_user_tickets():
                               message="In order to create a ticket, you must be logged in",
                               code=401)
     else:
-        current_time = datetime.datetime.utcnow()
+        current_time = datetime.datetime.now()
         expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
         open_tickets = MentorTicket.objects(time_opened__gte=expiry_time, claimed_by=None, created_by=user, time_opened__ne=None, time_complete=None).order_by('-time_created')
@@ -172,7 +172,7 @@ def claimed_tickets():
 @app.route('/mentorship/queue')
 def get_tickets():
 
-    current_time = datetime.datetime.utcnow()
+    current_time = datetime.datetime.now()
     expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
     tickets = MentorTicket.objects(time_opened__gte=expiry_time, claimed_by=None, time_complete=None).order_by('time_created')
@@ -224,7 +224,7 @@ def claim_ticket():
                                   code=409)
 
         ticket.claimed_by = user
-        ticket.time_claimed = datetime.datetime.utcnow()
+        ticket.time_claimed = datetime.datetime.now()
         ticket.save()
 
         return success_data_jsonify(ticket.dictionary_representation())
@@ -261,7 +261,7 @@ def reopen_ticket():
                                   message="In order to close a ticket, you must either be the mentor or the mentee",
                                   code=403)
 
-        current_time = datetime.datetime.utcnow()
+        current_time = datetime.datetime.now()
         expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
 
         if ticket.claimed_by == None and ticket.time_complete == None and ticket.time_opened > expiry_time:
@@ -272,7 +272,7 @@ def reopen_ticket():
         if ticket.created_by == user or ticket.claimed_by == user:
             ticket.claimed_by = None
             ticket.time_complete = None
-            ticket.time_opened = datetime.datetime.utcnow()
+            ticket.time_opened = datetime.datetime.now()
             ticket.save()
             return success_data_jsonify(ticket.dictionary_representation())
         else:
@@ -309,7 +309,7 @@ def close_ticket():
                                   code=404)
 
         if ticket.created_by == user or ticket.claimed_by == user:
-            ticket.time_complete = datetime.datetime.utcnow()
+            ticket.time_complete = datetime.datetime.now()
             ticket.save()
             return success_data_jsonify(ticket.dictionary_representation())
 
