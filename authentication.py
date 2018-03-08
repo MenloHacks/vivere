@@ -36,6 +36,22 @@ def get_ticket_admin(username):
 
     return generate_pass(user)
 
+@app.route('/get_users')
+def get_users():
+    if ADMIN_HEADER_FIELD not in request.headers:
+        return error_response(title="No password",
+                              message='To check in a user, please provide the admin password',
+                              code=401)
+    password = request.headers[ADMIN_HEADER_FIELD]
+
+    if password != os.environ['ADMIN_PASSWORD']:
+        return error_response(title="Invalid password",
+                              message='To check in a user, please provide the admin password',
+                              code=401)
+
+    users = User.objects(checked_in=True)
+    return success_data_jsonify([user.name for user in users])
+
 
 
 @app.route('/user/ticket')
@@ -53,7 +69,8 @@ def generate_pass(user):
     cardInfo.addPrimaryField('name', user.name, 'Name')
     cardInfo.addHeaderField('header', 'March 10-11, 2018', 'Menlo School')
 
-    cardInfo.addSecondaryField('loc', user.school, 'School')
+    if user.school:
+        cardInfo.addSecondaryField('loc', user.school, 'School')
     cardInfo.addSecondaryField('email', user.username, 'Email')
 
     organizationName = 'MenloHacks'
@@ -106,9 +123,13 @@ def generate_pass(user):
     file = passfile.create(cert_filename, key_filename, wwdr_filename, password)
     file.seek(0)
 
+
+
     return send_file(file, as_attachment=True,
                      attachment_filename='pass.pkpass',
                      mimetype='application/vnd.apple.pkpass')
+
+
 
 
 @app.route('/user/checkin', methods=['POST'])
@@ -141,17 +162,56 @@ def check_in_user():
                               message='The specified user does not exist.',
                               code=404)
 
-    if user.check_in_time is not None:
+    if user.checked_in:
             return error_response(title="Already checked in",
                                   message='The user specified is already checked in. Please see an organizer.',
                                   code=409)
 
-    user.check_in_time = datetime.datetime.now()
+    user.check_in_times.append(datetime.datetime.now())
+    user.checked_in = True
     user.save()
 
     return success_data_jsonify(user.check_in_dictionary_representation(), code=200)
 
+@app.route('/user/checkout', methods=['POST'])
+def check_out_user():
+    json = request.get_json()
+    if json is None:
+        return invalid_format()
 
+    if ADMIN_HEADER_FIELD not in request.headers:
+        return error_response(title="No password",
+                              message='To check in a user, please provide the admin password',
+                              code=401)
+
+    if 'username' not in json:
+        return error_response(title="No username provided",
+                              message='To check in a user, please provide the username of the user to check in',
+                              code=400)
+
+    username = json['username']
+    password = request.headers[ADMIN_HEADER_FIELD]
+
+    if os.environ['ADMIN_PASSWORD'] != password:
+        return error_response(title="Invalid password",
+                              message='To check in a user, please provide the correct shared password',
+                              code=401)
+
+    user = User.objects(username=username).first()
+    if user is None:
+        return error_response(title="User does not exist",
+                              message='The specified user does not exist.',
+                              code=404)
+
+    if not user.checked_in:
+            return error_response(title="Never checked in",
+                                  message='The user specified never checked in. Please see an organizer.',
+                                  code=409)
+
+    user.check_out_times.append(datetime.datetime.now())
+    user.checked_in = False
+    user.save()
+    return success_data_jsonify(user.check_in_dictionary_representation(), code=200)
 
 
 

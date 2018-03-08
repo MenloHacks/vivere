@@ -96,7 +96,6 @@ class Announcement(db.Document):
         return self.title
 
 
-from passlib.hash import django_pbkdf2_sha256
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
 
@@ -112,7 +111,11 @@ class User(db.Document):
 
     tshirt_size = db.StringField()
 
-    check_in_time = db.DateTimeField()
+    check_in_times = db.ListField(db.DateTimeField())
+
+    check_out_times = db.ListField(db.DateTimeField())
+
+    checked_in = db.BooleanField(default=False)
 
     is_admin = db.BooleanField(default=False)
 
@@ -178,6 +181,7 @@ class User(db.Document):
         return self.username
 
     meta = {
+        'strict': False,
         'indexes': [
             {'fields': ['username'], 'unique': True}
         ]

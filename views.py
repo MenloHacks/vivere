@@ -73,6 +73,33 @@ def get_announcements():
     return success_data_jsonify(list)
 
 
+CHALLENGE_WON = False
+
+@app.route('/admin/announcement', methods=['POST'])
+def create_announcement_challenge():
+    global CHALLENGE_WON
+    user = current_user()
+    if user is None:
+        return error_response(title="No user is currently logged in",
+                              message="In order to create a ticket, you must be logged in",
+                              code=401)
+    json = request.get_json()
+    if json is None:
+        return invalid_format()
+
+    if 'body' not in json:
+        return error_response(title="Say something",
+                              message="You need to provide a body",
+                              code=400)
+
+    if user.username == 'thomas@menlohacks.com' and CHALLENGE_WON is False:
+        a = Announcement()
+        a.message = json['body']
+        a.time = datetime.datetime.utcnow()
+        a.save()
+        CHALLENGE_WON = True
+
+
 
 @app.route('/events')
 #shouldn't be too many so I'll send them all at once.
@@ -90,6 +117,8 @@ def create_announcement():
     body = request.form['Body']
     from_number = request.form['From']
     account_sid = request.form['AccountSid']
+    with open("something.txt", "w") as f:
+        f.write(account_sid)
     if from_number in APPROVED_NUMBERS and account_sid == os.environ['TWILIO_SID']:
         a = Announcement()
         a.message = body

@@ -1,6 +1,7 @@
-from models import User
 import csv
 import os
+import time
+import urllib
 
 USER_FILENAME = 'users.csv'
 PROFILE_FILENAME = 'profiles.csv'
@@ -24,64 +25,42 @@ def generate_db():
     with open(user_location, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            username = row['email']
-            user = User.objects(username=username).first()
-            if user is None:
-                user = User()
-            if username == "thomas@menlohacks.com":
-                user.is_admin = True
 
-            password = row['password']
-
+            username = row["email"]
 
             user_id = row['id']
-            username_dictionary[user_id] = username
-
-            user.username = username
-            user.hashed_password = password
-
-            user.save()
+            username_dictionary[user_id] = {
+                "application": row["application"],
+                "profile": row["profile"],
+                "username": username
+            }
 
     with open(profile_location, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
-
-            user_id = row['user']
-            username = username_dictionary[user_id]
-
-            user = User.objects(username=username).first()
-
-            if user is None:
-                break
-
-            school = row['school']
-            tshirt = row['shirt size']
-            name = row['first name'] + " " + row['last name']
-
-            user.school = school
-            user.name = name
-            user.tshirt_size = tshirt
-
-            user.save()
+            for user_row in username_dictionary:
+                if username_dictionary[user_row]["profile"] == row["phone number"]:
+                    if row["is menlo"] == '1':
+                        username_dictionary[user_row]["is_menlo"] = True
+                    else:
+                        username_dictionary[user_row]["is_menlo"] = False
 
     with open(application_location, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            user_id = row['user']
-            username = username_dictionary[user_id]
+            for user_row in username_dictionary:
+                if username_dictionary[user_row]["application"] == row["id"]:
+                    if username_dictionary[user_row]["is_menlo"]:
 
-            user = User.objects(username=username).first()
+                        liability = row['liability form']
+                        photo_form = row['photo form']
 
-            if user is None:
-                break
+                        testfile = urllib.URLopener()
+                        testfile.retrieve(liability, "form")
+                        os.system("lp form -d Neighborhood")
 
-            liability = row['liability form']
-            photo_form = row['photo form']
+                        time.sleep(10)
 
-            user.liability_form_url = liability
-            user.photo_form_url = photo_form
-
-            user.save()
 
 
 if __name__ == "__main__":

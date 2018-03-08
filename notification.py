@@ -2,7 +2,8 @@ import pusher
 import os
 from constants import ALL_DEVICES_APNS, MENTOR_UPDATE, ANNOUNCEMENT_UPDATE, EVENT_UPDATE
 
-pusher_client = pusher.Pusher(os.environ['pusher_app_id'], os.environ['pusher_key'], os.environ['pusher_secret'])
+pusher_client = pusher.Pusher(os.environ['pusher_app_id'], os.environ['pusher_key'], os.environ['pusher_secret'],
+                              cluster="us2")
 
 
 def send_notification(message, channel_name):
