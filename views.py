@@ -95,7 +95,7 @@ def create_announcement_challenge():
     if user.username == 'thomas@menlohacks.com' and CHALLENGE_WON is False:
         a = Announcement()
         a.message = json['body']
-        a.time = datetime.datetime.utcnow()
+        a.time = datetime.datetime.now()
         a.save()
         CHALLENGE_WON = True
 
