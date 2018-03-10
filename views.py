@@ -113,7 +113,7 @@ def get_events():
 
 @app.route('/twilio/announcement', methods=['POST'])
 def create_announcement():
-    APPROVED_NUMBERS = ['+16502136962', '+16506531870', '+16505752753', '+16507431787', '+16504545867']
+    APPROVED_NUMBERS = ['+16505752753', '+16509467478', '+16507404761', '+16507148377']
     body = request.form['Body']
     from_number = request.form['From']
     account_sid = request.form['AccountSid']
