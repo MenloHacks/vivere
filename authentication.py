@@ -67,14 +67,14 @@ def get_ticket():
 def generate_pass(user):
     cardInfo = EventTicket()
     cardInfo.addPrimaryField('name', user.name, 'Name')
-    cardInfo.addHeaderField('header', 'March 10-11, 2018', 'Menlo School')
+    cardInfo.addHeaderField('header', 'March 9-10, 2019', 'Menlo School')
 
     if user.school:
         cardInfo.addSecondaryField('loc', user.school, 'School')
     cardInfo.addSecondaryField('email', user.username, 'Email')
 
     organizationName = 'MenloHacks'
-    passTypeIdentifier = 'pass.com.menlohacks.menlohacksiii'
+    passTypeIdentifier = 'pass.com.menlohacks.menlohacksiv'
     teamIdentifier = 'YWVU2284UC'
 
     passfile = Pass(cardInfo,
@@ -85,7 +85,7 @@ def generate_pass(user):
     passfile.labelColor = 'rgb(255,255,255)'
     passfile.foregroundColor = 'rgb(255,255,255)'
 
-    passfile.relevantDate = '2018-03-10T10:00-01:00'
+    passfile.relevantDate = '2019-03-09T10:00-11:00'
 
     latitude = 37.453240
     longitude = -122.191278
