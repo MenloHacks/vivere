@@ -30,7 +30,7 @@ admin.add_views(SecureModelView(User))
 admin.add_views(SecureModelView(MentorTicket))
 
 
-# if __name__ == '__main__':
-#     app.run()
+if __name__ == '__main__':
+     app.run()
 
 
