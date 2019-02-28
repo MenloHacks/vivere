@@ -28,7 +28,7 @@ def generate_db():
             user = User.objects(username=username).first()
             if user is None:
                 user = User()
-            if username == "thomas@menlohacks.com":
+            if username == "mitsuka.kiyohara@menloschool.org":
                 user.is_admin = True
 
             password = row['password']
