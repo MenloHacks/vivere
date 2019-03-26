@@ -208,6 +208,30 @@ class MentorTicket(db.Document):
         super(MentorTicket, self).save()
         send_mentor_update(ticket=self)
 
+
+    def dictionary_representation_simple(self):
+
+        current_time = datetime.datetime.now()
+        expiry_time = self.time_opened + datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
+
+
+        dictionary = {
+            'description': self.description,
+            'location': self.location,
+            'contact': self.contact,
+            'claimed': self.claimed_by != None,
+            'expired': current_time > expiry_time,
+            'time_created': self.time_created.isoformat(),
+            'id': str(self.id),
+        }
+
+        if self.time_complete is None:
+            dictionary['time_complete'] = None
+        else:
+            dictionary['time_complete'] = self.time_complete.isoformat()
+        return dictionary
+
+
     def dictionary_representation(self):
         from authentication import current_user
 
@@ -232,11 +256,6 @@ class MentorTicket(db.Document):
             dictionary['time_complete'] = None
         else:
             dictionary['time_complete'] = self.time_complete.isoformat()
-
-
-
-
-
         return dictionary
 
 

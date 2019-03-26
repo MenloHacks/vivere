@@ -31,11 +31,11 @@ MENLOHACKS_PASSBOOK_KEY_FILENAME = 'pass.pem'
 bucket = conn.get_bucket(MENLOHACKS_BUCKET_NAME)
 key = bucket.get_key(MENLOHACKS_PASSBOOK_KEY_FILENAME)
 
-dir = os.path.dirname(__file__)
-path = 'secure/' + MENLOHACKS_PASSBOOK_KEY_FILENAME
-filename = os.path.join(dir, path)
-
-key.get_contents_to_filename(filename)
+# dir = os.path.dirname(__file__)
+# path = 'secure/' + MENLOHACKS_PASSBOOK_KEY_FILENAME
+# filename = os.path.join(dir, path)
+#
+# key.get_contents_to_filename(filename)
 
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 CORS(app)

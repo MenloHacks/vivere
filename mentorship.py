@@ -7,30 +7,11 @@ from authentication import current_user
 from utils import success_data_jsonify, error_response, invalid_format
 import bson
 import threading
+import time
+from models import MentorTicket
 from notification import send_mentor_expiration
+import atexit
 
-
-
-def mark_expired():
-    current_time = datetime.datetime.now()
-    expiry_time = current_time - datetime.timedelta(seconds=MentorTicket.EXPIRATION_TIME)
-    #in case we miss it for some reason
-    expiry_time_cutoff = expiry_time - datetime.timedelta(minutes=2)
-
-    expired_tickets = MentorTicket.objects(time_complete=None, time_opened__lt=expiry_time, time_opened__gte=expiry_time_cutoff,
-                                           claimed_by=None).order_by('-time_created')
-
-    list = []
-    for t in expired_tickets:
-        list.append(t.dictionary_representation())
-
-    if len(list) > 0:
-        send_mentor_expiration(list)
-
-    threading.Timer(60, mark_expired).start()
-
-
-mark_expired()
 
 @app.route('/mentorship/create', methods=['POST'])
 def create_ticket():
@@ -48,10 +29,10 @@ def create_ticket():
                               message="Please tell the mentor where you are currently set up",
                               code=400)
 
-    if 'contact' not in json:
-        return error_response(title="No contact information provided",
-                              message="Please provide a way for the mentor to contact you",
-                              code=400)
+    # if 'contact' not in json:
+    #     return error_response(title="No contact information provided",
+    #                           message="Please provide a way for the mentor to contact you",
+    #                           code=400)
 
     user = current_user()
     if user is None:
@@ -71,10 +52,10 @@ def create_ticket():
         return error_response(title="Location is blank",
                               message="Please tell the mentor where you are currently set up",
                               code=400)
-    if len(contact) == 0:
-        return error_response(title="Contact information is blank",
-                              message="Please provide a way for the mentor to contact you",
-                              code=400)
+    # if len(contact) == 0:
+    #     return error_response(title="Contact information is blank",
+    #                           message="Please provide a way for the mentor to contact you",
+    #                           code=400)
 
     ticket = MentorTicket()
 

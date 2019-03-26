@@ -1,7 +1,7 @@
 import datetime
 
 EVENT_START_TIME = datetime.datetime(year=2019, month=3, day=9, hour=10)
-EVENT_END_TIME = datetime.datetime(year=2019, month=3, day=10, hour=3)
+EVENT_END_TIME = datetime.datetime(year=2019, month=3, day=10, hour=15)
 
 HACKING_START_TIME = datetime.datetime(year=2019, month=3, day=9, hour=12)
 HACKING_END_TIME = datetime.datetime(year=2019, month=3, day=10, hour=12)

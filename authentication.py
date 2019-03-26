@@ -15,6 +15,7 @@ import hashlib
 
 
 
+
 @app.route('/user/ticket/<username>')
 def get_ticket_admin(username):
     if ADMIN_HEADER_FIELD not in request.headers:
@@ -119,6 +120,8 @@ def generate_pass(user):
 
     password = os.environ['PASSBOOK_PASSWORD']
 
+    # https://github.com/devartis/passbook/issues/1 to get cert and pem
+
 
     file = passfile.create(cert_filename, key_filename, wwdr_filename, password)
     file.seek(0)
@@ -151,7 +154,13 @@ def check_in_user():
     username = json['username']
     password = request.headers[ADMIN_HEADER_FIELD]
 
-    if os.environ['ADMIN_PASSWORD'] != password:
+    if str(os.environ['ADMIN_PASSWORD']) != str(password):
+        print(password)
+        print(password == "6XjMGH7d2VRXdRsENgZTKeBk")
+        print(len(password))
+        print(os.environ["ADMIN_PASSWORD"])
+        print(len(os.environ["ADMIN_PASSWORD"]))
+        print(os.environ["ADMIN_PASSWORD"] == "6XjMGH7d2VRXdRsENgZTKeBk")
         return error_response(title="Invalid password",
                               message='To check in a user, please provide the correct shared password',
                               code=401)
@@ -322,6 +331,7 @@ def admin_login():
     if request.method == 'GET':
         return render_template('login.html')
     # return redirect(url_for('index'))
+
 
 
 def current_user():
