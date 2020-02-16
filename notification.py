@@ -4,7 +4,7 @@ from constants import ALL_DEVICES_APNS, MENTOR_UPDATE, ANNOUNCEMENT_UPDATE, EVEN
 from pusher_push_notifications import PushNotifications
 
 pusher_client = pusher.Pusher(os.environ['pusher_app_id'], os.environ['pusher_key'], os.environ['pusher_secret'],
-                              cluster="us2")
+                              cluster="us3")
 
 beams_client = PushNotifications(
     instance_id=os.environ["pusher_beams_instance_id"],
