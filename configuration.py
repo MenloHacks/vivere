@@ -24,8 +24,8 @@ conn = boto.s3.connect_to_region(
         )
 
 
-MENLOHACKS_BUCKET_NAME = 'menlohacksiv'
-MENLOHACKS_PASSBOOK_KEY_FILENAME = 'pass.pem'
+MENLOHACKS_BUCKET_NAME = 'menlohacksv' #change for menlohacks vi
+MENLOHACKS_PASSBOOK_KEY_FILENAME = 'certificate.pem'
 
 
 bucket = conn.get_bucket(MENLOHACKS_BUCKET_NAME)

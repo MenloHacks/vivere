@@ -68,14 +68,14 @@ def get_ticket():
 def generate_pass(user):
     cardInfo = EventTicket()
     cardInfo.addPrimaryField('name', user.name, 'Name')
-    cardInfo.addHeaderField('header', 'March 9-10, 2019', 'Menlo School')
+    cardInfo.addHeaderField('header', 'March 14-15, 2020', 'Menlo School') #change date for menlohacks vi
 
     if user.school:
         cardInfo.addSecondaryField('loc', user.school, 'School')
     cardInfo.addSecondaryField('email', user.username, 'Email')
 
     organizationName = 'MenloHacks'
-    passTypeIdentifier = 'pass.com.menlohacks.menlohacksiv'
+    passTypeIdentifier = 'pass.com.menlohacks.menlohacksv' #change passTypeIdentifier 
     teamIdentifier = 'YWVU2284UC'
 
     passfile = Pass(cardInfo,
@@ -115,7 +115,7 @@ def generate_pass(user):
     key_path = 'secure/' + MENLOHACKS_PASSBOOK_KEY_FILENAME
 
     key_filename = os.path.join(dir, key_path)
-    cert_filename = os.path.join(dir, 'passbook/certificate.pem')
+    cert_filename = os.path.join(dir, 'passbook/certificate.pem') #change name once you make new certification 
     wwdr_filename = os.path.join(dir, 'passbook/WWDR.pem')
 
     password = os.environ['PASSBOOK_PASSWORD']
